@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "kUIqaxXXdHx8CuqX04Gl8OcnpL4mcHipIbUQYGi53mthWNYCnL2YbY9hYwEzg9xpR8OXsnPS1Rl2lp9yoaiMvQ==",
+  "dgSpecHash": "F6uxCX8UILT+5A/D6ZZi4+9jt8keQ9P3yRY6i38n5UpZPqJ5QWbUY/gFUf3JWEuQ16j3Vv+d+EFmiRgCerippg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\reveszg\\Desktop\\C#\\Windows Service\\DemoWorkerService\\DemoWorkerService\\DemoWorkerService.csproj",
+  "projectFilePath": "C:\\GitRepo\\szakdoga\\DemoWorkerService\\DemoWorkerService.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

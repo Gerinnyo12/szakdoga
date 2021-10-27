@@ -12,7 +12,7 @@ namespace DemoWorkerService
         public static ulong IterationCounter { get; set; }
         private readonly FileSystemWatcher FileSystemWatcher;
         Dictionary<string, Runable> DLLs { get; set; }
-        KeyValuePair<string, ulong> LastModifiedFile;
+        Dictionary<string, ulong> LastModificationOfFiles { get; set; }
 
         public App()
         {
@@ -24,10 +24,9 @@ namespace DemoWorkerService
             FileSystemWatcher.Deleted += DLLDeleteHandler;
             FileSystemWatcher.Changed += DLLReplaceHandler;
             DLLs = new Dictionary<string, Runable>();
-            LastModifiedFile = new KeyValuePair<string, ulong>(string.Empty, 0);
+            LastModificationOfFiles = new Dictionary<string, ulong>();
             AddAlreadyExistingDlls();
             // nem fog elkezdodni az iteralas amig a konstruktor be nem fejezodik
-            // ami jo :=)
         }
 
         private void AddAlreadyExistingDlls()
@@ -75,7 +74,7 @@ namespace DemoWorkerService
                     {
                         File.Delete(runable.Key);
                     }
-                    Console.WriteLine($"\n{e.Message}\n");
+                    Console.WriteLine($"\t{e.Message}\n");
                 }
             });
             Console.WriteLine("Befejezodott a container futtatasa");
@@ -83,13 +82,11 @@ namespace DemoWorkerService
 
         private void DLLReplaceHandler(object sender, FileSystemEventArgs e)
         {
-            if (LastModifiedFile.Key != e.FullPath || LastModifiedFile.Value < IterationCounter)
+            // megkereses, torles es hozzaadas
+            if (LastModificationOfFiles[e.FullPath] < IterationCounter)
             {
-                Console.WriteLine("Lefutott a change");
-                // megkereses, torles es hozzaadas
                 DeleteDLLFromContainer(e.FullPath);
                 AddDLLToContainer(e.FullPath);
-                LastModifiedFile = new KeyValuePair<string, ulong>(e.FullPath, IterationCounter + 1);
             }
             else
             {
@@ -102,20 +99,20 @@ namespace DemoWorkerService
             AddDLLToContainer(e.FullPath);
         }
 
-        private void AddDLLToContainer(string fullPath)
+        private void AddDLLToContainer(string path)
         {
             // https://social.msdn.microsoft.com/Forums/en-US/caba700d-1011-4c48-8a39-e9513c81baad/delete-dll-wo-closing-the-application?forum=csharplanguage
             // https://stackoverflow.com/questions/18362368/loading-dlls-at-runtime-in-c-sharp
-            byte[] bites = File.ReadAllBytes(fullPath); //TODO eception handling
-            var file = Assembly.Load(bites);
+            byte[] bites = File.ReadAllBytes(path); //TODO eception handling
+            var file = Assembly.Load(bites);    //TODO eception handling
             var runable = new Runable();
             bool isCreated = runable.CreateRunableInstance(file);
             if (isCreated)
             {
-                DLLs.Add(fullPath, runable);
-                Console.WriteLine($"Hozzaadtal egy DLL-t: {fullPath}");
+                DLLs.Add(path, runable);
+                Console.WriteLine($"Hozzaadtal egy DLL-t: {path}");
             }
-            LastModifiedFile = new KeyValuePair<string, ulong>(fullPath, IterationCounter + 1);
+            LastModificationOfFiles.Add(path, IterationCounter + 1);
         }
 
         private void DLLDeleteHandler(object sender, FileSystemEventArgs e)
@@ -123,17 +120,15 @@ namespace DemoWorkerService
             DeleteDLLFromContainer(e.FullPath);
         }
 
-        private void DeleteDLLFromContainer(string fullPath)
+        private void DeleteDLLFromContainer(string path)
         {
-            var index = DLLs.ToList().FirstOrDefault(dll => dll.Key == fullPath).Key;
-            if (DLLs.ContainsKey(index))
-            {
-                DLLs.Remove(index);
-                Console.WriteLine($"Toroltel egy DLL-t: {index}");
+            LastModificationOfFiles.Remove(path);
+            if (DLLs.Remove(path)) {
+                Console.WriteLine($"Toroltel egy DLL-t: {path}");
             }
             else
             {
-                Console.WriteLine("Nem toroltuk ki");
+                Console.WriteLine("Nem volt mit kitorolni");
             }
         }
     }

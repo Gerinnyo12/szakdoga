@@ -17,3 +17,22 @@ C:\Users\reveszg\Desktop\C#\Windows Service\DemoWorkerService\DemoWorkerService\
 C:\Users\reveszg\Desktop\C#\Windows Service\DemoWorkerService\DemoWorkerService\obj\Debug\net5.0\ref\DemoWorkerService.dll
 C:\Users\reveszg\Desktop\C#\Windows Service\DemoWorkerService\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.pdb
 C:\Users\reveszg\Desktop\C#\Windows Service\DemoWorkerService\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.genruntimeconfig.cache
+C:\GitRepo\szakdoga\DemoWorkerService\bin\Debug\net5.0\DemoWorkerService.exe
+C:\GitRepo\szakdoga\DemoWorkerService\bin\Debug\net5.0\DemoWorkerService.deps.json
+C:\GitRepo\szakdoga\DemoWorkerService\bin\Debug\net5.0\DemoWorkerService.runtimeconfig.json
+C:\GitRepo\szakdoga\DemoWorkerService\bin\Debug\net5.0\DemoWorkerService.runtimeconfig.dev.json
+C:\GitRepo\szakdoga\DemoWorkerService\bin\Debug\net5.0\DemoWorkerService.dll
+C:\GitRepo\szakdoga\DemoWorkerService\bin\Debug\net5.0\ref\DemoWorkerService.dll
+C:\GitRepo\szakdoga\DemoWorkerService\bin\Debug\net5.0\DemoWorkerService.pdb
+C:\GitRepo\szakdoga\DemoWorkerService\bin\Debug\net5.0\Shared.dll
+C:\GitRepo\szakdoga\DemoWorkerService\bin\Debug\net5.0\Shared.pdb
+C:\GitRepo\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.csproj.AssemblyReference.cache
+C:\GitRepo\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.GeneratedMSBuildEditorConfig.editorconfig
+C:\GitRepo\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.AssemblyInfoInputs.cache
+C:\GitRepo\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.AssemblyInfo.cs
+C:\GitRepo\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.csproj.CoreCompileInputs.cache
+C:\GitRepo\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.csproj.CopyComplete
+C:\GitRepo\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.dll
+C:\GitRepo\szakdoga\DemoWorkerService\obj\Debug\net5.0\ref\DemoWorkerService.dll
+C:\GitRepo\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.pdb
+C:\GitRepo\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.genruntimeconfig.cache

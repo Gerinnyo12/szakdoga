@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\reveszg\\Desktop\\C#\\Windows Service\\DemoWorkerService\\Shared\\Shared.csproj": {}
+    "C:\\GitRepo\\szakdoga\\Shared\\Shared.csproj": {}
   },
   "projects": {
-    "C:\\Users\\reveszg\\Desktop\\C#\\Windows Service\\DemoWorkerService\\Shared\\Shared.csproj": {
+    "C:\\GitRepo\\szakdoga\\Shared\\Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\reveszg\\Desktop\\C#\\Windows Service\\DemoWorkerService\\Shared\\Shared.csproj",
+        "projectUniqueName": "C:\\GitRepo\\szakdoga\\Shared\\Shared.csproj",
         "projectName": "Shared",
-        "projectPath": "C:\\Users\\reveszg\\Desktop\\C#\\Windows Service\\DemoWorkerService\\Shared\\Shared.csproj",
+        "projectPath": "C:\\GitRepo\\szakdoga\\Shared\\Shared.csproj",
         "packagesPath": "C:\\Users\\reveszg\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\reveszg\\Desktop\\C#\\Windows Service\\DemoWorkerService\\Shared\\obj\\",
+        "outputPath": "C:\\GitRepo\\szakdoga\\Shared\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",

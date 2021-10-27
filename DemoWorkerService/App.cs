@@ -10,7 +10,7 @@ namespace DemoWorkerService
     public class App
     {
         public static ulong IterationCounter { get; set; }
-        private readonly FileSystemWatcher FileSystemWatcher;
+        readonly FileSystemWatcher FileSystemWatcher;
         Dictionary<string, Runable> DLLs { get; set; }
         Dictionary<string, ulong> LastModificationOfFiles { get; set; }
 
@@ -70,11 +70,11 @@ namespace DemoWorkerService
                     // tehat altalaban 5x fog futni egyszerre
                     // de ha az elso dob egy hibat, akkor kitoroljuk, de a tobbi 4 mar futasban van
                     // es ezt le kell kezelni
+                    Console.WriteLine($"\t{e.Message}\n");
                     if (File.Exists(runable.Key))
                     {
                         File.Delete(runable.Key);
                     }
-                    Console.WriteLine($"\t{e.Message}\n");
                 }
             });
             Console.WriteLine("Befejezodott a container futtatasa");
@@ -118,8 +118,9 @@ namespace DemoWorkerService
         private void DLLDeleteHandler(object sender, FileSystemEventArgs e)
         {
             DeleteDLLFromContainer(e.FullPath);
+            
         }
-
+        
         private void DeleteDLLFromContainer(string path)
         {
             LastModificationOfFiles.Remove(path);

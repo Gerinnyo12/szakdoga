@@ -9,10 +9,10 @@ namespace DemoWorkerService
 {
     public class App
     {
-        public static ulong IterationCounter { get; set; }
+        public static ulong IterationCounter { get; set; } = 0;
         readonly FileSystemWatcher FileSystemWatcher;
-        Dictionary<string, Runable> DLLs { get; set; }
-        Dictionary<string, ulong> LastModificationOfFiles { get; set; }
+        Dictionary<string, Runable> DLLContainer { get; set; }
+        Dictionary<string, ulong> ChangeHelper { get; set; }
 
         public App()
         {
@@ -20,21 +20,12 @@ namespace DemoWorkerService
             {
                 EnableRaisingEvents = true,
             };
-            FileSystemWatcher.Created += DLLAddHandler;
-            FileSystemWatcher.Deleted += DLLDeleteHandler;
-            FileSystemWatcher.Changed += DLLReplaceHandler;
-            DLLs = new Dictionary<string, Runable>();
-            LastModificationOfFiles = new Dictionary<string, ulong>();
+            FileSystemWatcher.Created += (sender, file) => AddDLL(file.FullPath);
+            FileSystemWatcher.Deleted += (sender, file) => DeleteDLLFromContainer(file.FullPath);
+            FileSystemWatcher.Changed += ReplaceFile;
+            DLLContainer = new Dictionary<string, Runable>();
+            ChangeHelper = new Dictionary<string, ulong>();
             AddAlreadyExistingDlls();
-            // nem fog elkezdodni az iteralas amig a konstruktor be nem fejezodik
-        }
-
-        private void AddAlreadyExistingDlls()
-        {
-            foreach (var dll in Directory.GetFiles(@"C:\Users\reveszg\Desktop\DllContainer", "*.dll"))
-            {
-                AddDLLToContainer(dll);
-            }
         }
 
         public async Task Start()
@@ -53,15 +44,17 @@ namespace DemoWorkerService
             // https://stackoverflow.com/questions/604831/collection-was-modified-enumeration-operation-may-not-execute
             // https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.run?view=net-5.0
 
-            Console.WriteLine("Elkezdodott a container futtatasa");
-            var dllList = DLLs.ToList();
-            Parallel.ForEach(dllList, async runable =>
+            //Console.WriteLine("Elkezdodott a container futtatasa");
+            var dllList = DLLContainer.ToList();
+            Parallel.ForEach(dllList, async pair =>
             {
                 // https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/how-to-handle-exceptions-in-parallel-loops
                 // https://stackoverflow.com/questions/1308432/do-try-catch-blocks-hurt-performance-when-exceptions-are-not-thrown
+                string path = pair.Key;
+                var runable = pair.Value;
                 try
                 {
-                    await runable.Value.InvokeRun();
+                    await runable.InvokeRun();
                 }
                 catch (Exception e)
                 {
@@ -70,23 +63,32 @@ namespace DemoWorkerService
                     // tehat altalaban 5x fog futni egyszerre
                     // de ha az elso dob egy hibat, akkor kitoroljuk, de a tobbi 4 mar futasban van
                     // es ezt le kell kezelni
-                    Console.WriteLine($"\t{e.Message}\n");
-                    if (File.Exists(runable.Key))
+                    Console.WriteLine($"ELKAPTAM!!!!!!!!");
+                    //ha meg nem toroltuk a fajlt akkor toroljuk
+                    if (File.Exists(path))
                     {
-                        File.Delete(runable.Key);
+                        File.Delete(path);
                     }
                 }
             });
-            Console.WriteLine("Befejezodott a container futtatasa");
+            //Console.WriteLine("Befejezodott a container futtatasa");
         }
 
-        private void DLLReplaceHandler(object sender, FileSystemEventArgs e)
+        private void AddAlreadyExistingDlls()
+        {
+            foreach (var dll in Directory.GetFiles(@"C:\Users\reveszg\Desktop\DllContainer", "*.dll"))
+            {
+                AddDLL(dll);
+            }
+        }
+
+        private void ReplaceFile(object sender, FileSystemEventArgs e)
         {
             // megkereses, torles es hozzaadas
-            if (LastModificationOfFiles[e.FullPath] < IterationCounter)
+            if (ChangeHelper[e.FullPath] < IterationCounter)
             {
                 DeleteDLLFromContainer(e.FullPath);
-                AddDLLToContainer(e.FullPath);
+                AddDLL(e.FullPath);
             }
             else
             {
@@ -94,38 +96,60 @@ namespace DemoWorkerService
             }
         }
 
-        private void DLLAddHandler(object sender, FileSystemEventArgs e)
+        private void AddDLL(string path)
         {
-            AddDLLToContainer(e.FullPath);
+            AddDLLToContainer(path);
+            ChangeHelper[path] = IterationCounter + 1;
         }
 
-        private void AddDLLToContainer(string path)
+        private async void AddDLLToContainer(string path)
         {
+            // azert async, hogy be lehessen varni a task.delay-eket blockolas nelkul
             // https://social.msdn.microsoft.com/Forums/en-US/caba700d-1011-4c48-8a39-e9513c81baad/delete-dll-wo-closing-the-application?forum=csharplanguage
             // https://stackoverflow.com/questions/18362368/loading-dlls-at-runtime-in-c-sharp
-            byte[] bites = File.ReadAllBytes(path); //TODO eception handling
-            var file = Assembly.Load(bites);    //TODO eception handling
+            byte[] bites = null;
+            Assembly file = null;
+            bool done = false;
+            int numOfTries = 0;
+            while (!done && numOfTries <= 10)
+            {
+                try
+                {
+                    if (bites == null)
+                    {
+                        bites = File.ReadAllBytes(path);
+                    }
+                    if (file == null)
+                    {
+                        file = Assembly.Load(bites);
+                    }
+                    done = true;
+                }
+                catch (Exception e)
+                {
+                    numOfTries++;
+                    Console.WriteLine($"{numOfTries}. proba");
+                    //Console.WriteLine(e.Message);
+                    //Console.WriteLine(path);
+                    await Task.Delay(100);
+                }
+                // https://stackoverflow.com/questions/34549641/async-await-vs-getawaiter-getresult-and-callback
+            }
             var runable = new Runable();
-            bool isCreated = runable.CreateRunableInstance(file);
+            bool isCreated = file != null && runable.CreateRunableInstance(file);
             if (isCreated)
             {
-                DLLs.Add(path, runable);
-                Console.WriteLine($"Hozzaadtal egy DLL-t: {path}");
+                DLLContainer.Add(path, runable);
+                Console.WriteLine($"\t + {Path.GetFileName(path)}");
             }
-            LastModificationOfFiles.Add(path, IterationCounter + 1);
         }
 
-        private void DLLDeleteHandler(object sender, FileSystemEventArgs e)
-        {
-            DeleteDLLFromContainer(e.FullPath);
-            
-        }
-        
         private void DeleteDLLFromContainer(string path)
         {
-            LastModificationOfFiles.Remove(path);
-            if (DLLs.Remove(path)) {
-                Console.WriteLine($"Toroltel egy DLL-t: {path}");
+            ChangeHelper.Remove(path);
+            if (DLLContainer.Remove(path))
+            {
+                Console.WriteLine($"\t - {Path.GetFileName(path)}");
             }
             else
             {

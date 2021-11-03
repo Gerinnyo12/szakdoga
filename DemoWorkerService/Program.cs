@@ -7,7 +7,7 @@ namespace DemoWorkerService
     {
         static async Task Main(string[] args)
         {
-            await new App().Start();
+            await new App(@"C:\Users\reveszg\Desktop\DllContainer", "*.dll").Start();
         }
     }
 }

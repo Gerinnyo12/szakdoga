@@ -14,9 +14,9 @@ namespace DemoWorkerService
         Dictionary<string, Runable> DLLContainer { get; set; }
         Dictionary<string, ulong> ChangeHelper { get; set; }
 
-        public App()
+        public App(string directory, string searchPattern)
         {
-            FileSystemWatcher = new FileSystemWatcher(@"C:\Users\reveszg\Desktop\DllContainer", "*.dll")
+            FileSystemWatcher = new FileSystemWatcher(directory, searchPattern)
             {
                 EnableRaisingEvents = true,
             };
@@ -25,7 +25,7 @@ namespace DemoWorkerService
             FileSystemWatcher.Changed += ReplaceFile;
             DLLContainer = new Dictionary<string, Runable>();
             ChangeHelper = new Dictionary<string, ulong>();
-            AddAlreadyExistingDlls();
+            AddAlreadyExistingDlls(directory, searchPattern);
         }
 
         public async Task Start()
@@ -58,12 +58,7 @@ namespace DemoWorkerService
                 }
                 catch (Exception e)
                 {
-                    // es ellenorozni, hogy nem toroltuk e mar ki
-                    // pl. 1 mp-enkent fut 5mp-ig
-                    // tehat altalaban 5x fog futni egyszerre
-                    // de ha az elso dob egy hibat, akkor kitoroljuk, de a tobbi 4 mar futasban van
-                    // es ezt le kell kezelni
-                    Console.WriteLine($"ELKAPTAM!!!!!!!!");
+                    Console.WriteLine($"  ELKAPTAM!!!!");
                     //ha meg nem toroltuk a fajlt akkor toroljuk
                     if (File.Exists(path))
                     {
@@ -74,9 +69,9 @@ namespace DemoWorkerService
             //Console.WriteLine("Befejezodott a container futtatasa");
         }
 
-        private void AddAlreadyExistingDlls()
+        private void AddAlreadyExistingDlls(string directory, string searchPattern)
         {
-            foreach (var dll in Directory.GetFiles(@"C:\Users\reveszg\Desktop\DllContainer", "*.dll"))
+            foreach (var dll in Directory.GetFiles(directory, searchPattern))
             {
                 AddDLL(dll);
             }
@@ -92,7 +87,7 @@ namespace DemoWorkerService
             }
             else
             {
-                Console.WriteLine("Nem futott le a change");
+                Console.WriteLine("\t Nem futott le a change");
             }
         }
 
@@ -130,7 +125,6 @@ namespace DemoWorkerService
                     numOfTries++;
                     Console.WriteLine($"{numOfTries}. proba");
                     //Console.WriteLine(e.Message);
-                    //Console.WriteLine(path);
                     await Task.Delay(100);
                 }
                 // https://stackoverflow.com/questions/34549641/async-await-vs-getawaiter-getresult-and-callback

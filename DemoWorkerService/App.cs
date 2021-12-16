@@ -42,7 +42,7 @@ namespace DemoWorkerService
             while(true)
             {
                 Console.WriteLine($"{++IterationCounter}. iteracio.");
-                //RunDLLs();
+                RunDLLs();
                 await Task.Delay(1000);
             }
         }
@@ -213,8 +213,8 @@ namespace DemoWorkerService
                     context.Assembly = null;
                     Contexts.Remove(directoryPath);
                     context.Context.Unload();
-                    //GC.Collect();
-                    //GC.WaitForPendingFinalizers();
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
                     GC.Collect();
                     GC.WaitForPendingFinalizers();
                     string directoryName = Path.GetFileName(directoryPath);

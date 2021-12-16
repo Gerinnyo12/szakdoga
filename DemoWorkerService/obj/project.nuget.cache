@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "F6uxCX8UILT+5A/D6ZZi4+9jt8keQ9P3yRY6i38n5UpZPqJ5QWbUY/gFUf3JWEuQ16j3Vv+d+EFmiRgCerippg==",
+  "dgSpecHash": "WCE1AnpCU26R2VDz3YvDd9l8sdY2i0vqRS0Q/8yYmfuVAKzTiRqSWxNyrqhaQhgSNmwjGzRtoF665AN/3kJljg==",
   "success": true,
-  "projectFilePath": "C:\\GitRepo\\szakdoga\\DemoWorkerService\\DemoWorkerService.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\GitRepos\\szakdoga\\DemoWorkerService\\DemoWorkerService.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\reveszg\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.12\\microsoft.netcore.app.host.win-x64.5.0.12.nupkg.sha512"
+  ],
   "logs": []
 }

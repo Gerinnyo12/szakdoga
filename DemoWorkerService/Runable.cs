@@ -1,9 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Loader;
 using System.Threading.Tasks;
-
-using Shared;
 
 namespace DemoWorkerService
 {
@@ -14,27 +14,35 @@ namespace DemoWorkerService
         MethodInfo RunMethod;
         uint Timer;
         ulong StartedAt;
+        public bool isCallable { get; set; }
 
-        public bool CreateRunableInstance(Assembly dll)
+        public bool CreateRunableInstance(Assembly assembly)
         {
-            var runnableClasses = dll.GetExportedTypes();
-            if (runnableClasses.Any())
+            var runnableClass = assembly.ExportedTypes.FirstOrDefault();
+            if(runnableClass != null && runnableClass.GetInterface("Shared.IWorkerTask") != null)
             {
-                var runnableClass = runnableClasses.FirstOrDefault();
-                if (runnableClass.IsClass && runnableClass.GetInterface(typeof(IWorkerTask).FullName) != null)
+                try
                 {
-                    var instance = Activator.CreateInstance(runnableClass); //TODO exception handling
+                    // itt mar be van toltve az appdomain-be, mert ez a Assembly dll parameter onnan van
+                    // Creates a new instance of the specified type. Parameters specify the assembly where the type is defined, and the name of the type.
+                    var asd = AppDomain.CurrentDomain.GetAssemblies();
+                    var instance = assembly.CreateInstance(runnableClass.FullName);
                     var runMethod = runnableClass.GetMethod("Run");
                     var timerPropety = runnableClass.GetProperty("Timer");
                     uint timer = (uint)timerPropety.GetValue(instance);
-                    if (runMethod != null && timer != 0)
+                    if(runMethod != null && timer != 0)
                     {
                         Instance = instance;
                         RunMethod = runMethod;
                         Timer = timer;
                         StartedAt = App.IterationCounter + 1;
+                        isCallable = true;
                         return true;
                     }
+                }
+                catch(Exception e)
+                {
+                    //TODO vmi komolyabb exception handeling
                 }
             }
             return false;
@@ -47,12 +55,19 @@ namespace DemoWorkerService
 
         public async Task<bool> InvokeRun()
         {
-            if (CanStartRun())
+            if(CanStartRun())
             {
                 await (Task)RunMethod.Invoke(Instance, Array.Empty<object>());
                 return true;
             }
             return false;
+        }
+
+        public void RemoveReferences()
+        {
+            isCallable = false;
+            Instance = null;
+            RunMethod = null;
         }
 
     }

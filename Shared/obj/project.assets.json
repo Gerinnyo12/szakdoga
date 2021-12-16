@@ -8,26 +8,19 @@
     "net5.0": []
   },
   "packageFolders": {
-    "C:\\Users\\reveszg\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\reveszg\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\GitRepo\\szakdoga\\Shared\\Shared.csproj",
+      "projectUniqueName": "C:\\GitRepos\\szakdoga\\Shared\\Shared.csproj",
       "projectName": "Shared",
-      "projectPath": "C:\\GitRepo\\szakdoga\\Shared\\Shared.csproj",
+      "projectPath": "C:\\GitRepos\\szakdoga\\Shared\\Shared.csproj",
       "packagesPath": "C:\\Users\\reveszg\\.nuget\\packages\\",
-      "outputPath": "C:\\GitRepo\\szakdoga\\Shared\\obj\\",
+      "outputPath": "C:\\GitRepos\\szakdoga\\Shared\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-      ],
       "configFilePaths": [
         "C:\\Users\\reveszg\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -35,7 +28,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "http://baget.linda.griffsoft.hu/v3/index.json": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -68,7 +60,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.301\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }

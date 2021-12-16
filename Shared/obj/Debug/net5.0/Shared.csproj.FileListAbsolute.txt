@@ -21,3 +21,14 @@ C:\GitRepo\szakdoga\Shared\obj\Debug\net5.0\Shared.csproj.CoreCompileInputs.cach
 C:\GitRepo\szakdoga\Shared\obj\Debug\net5.0\Shared.dll
 C:\GitRepo\szakdoga\Shared\obj\Debug\net5.0\ref\Shared.dll
 C:\GitRepo\szakdoga\Shared\obj\Debug\net5.0\Shared.pdb
+C:\GitRepos\szakdoga\Shared\bin\Debug\net5.0\Shared.deps.json
+C:\GitRepos\szakdoga\Shared\bin\Debug\net5.0\Shared.dll
+C:\GitRepos\szakdoga\Shared\bin\Debug\net5.0\ref\Shared.dll
+C:\GitRepos\szakdoga\Shared\bin\Debug\net5.0\Shared.pdb
+C:\GitRepos\szakdoga\Shared\obj\Debug\net5.0\Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\GitRepos\szakdoga\Shared\obj\Debug\net5.0\Shared.AssemblyInfoInputs.cache
+C:\GitRepos\szakdoga\Shared\obj\Debug\net5.0\Shared.AssemblyInfo.cs
+C:\GitRepos\szakdoga\Shared\obj\Debug\net5.0\Shared.csproj.CoreCompileInputs.cache
+C:\GitRepos\szakdoga\Shared\obj\Debug\net5.0\Shared.dll
+C:\GitRepos\szakdoga\Shared\obj\Debug\net5.0\ref\Shared.dll
+C:\GitRepos\szakdoga\Shared\obj\Debug\net5.0\Shared.pdb

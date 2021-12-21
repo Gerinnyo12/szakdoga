@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Loader;
 using System.Threading.Tasks;
 
 namespace DemoWorkerService
@@ -14,7 +12,7 @@ namespace DemoWorkerService
         MethodInfo RunMethod;
         uint Timer;
         ulong StartedAt;
-        public bool isCallable { get; set; }
+        public bool isCallable { get; private set; }
 
         public bool CreateRunableInstance(Assembly assembly)
         {
@@ -25,7 +23,6 @@ namespace DemoWorkerService
                 {
                     // itt mar be van toltve az appdomain-be, mert ez a Assembly dll parameter onnan van
                     // Creates a new instance of the specified type. Parameters specify the assembly where the type is defined, and the name of the type.
-                    var asd = AppDomain.CurrentDomain.GetAssemblies();
                     var instance = assembly.CreateInstance(runnableClass.FullName);
                     var runMethod = runnableClass.GetMethod("Run");
                     var timerPropety = runnableClass.GetProperty("Timer");
@@ -48,7 +45,7 @@ namespace DemoWorkerService
             return false;
         }
 
-        public bool CanStartRun()
+        private bool CanStartRun()
         {
             return (App.IterationCounter - StartedAt) % Timer == 0;
         }
@@ -57,7 +54,10 @@ namespace DemoWorkerService
         {
             if(CanStartRun())
             {
+                isCallable = false;
+                // amig nem futott le, addig nem lehet megegyszer mehivni
                 await (Task)RunMethod.Invoke(Instance, Array.Empty<object>());
+                isCallable = true;
                 return true;
             }
             return false;

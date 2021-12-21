@@ -32,3 +32,4 @@ C:\GitRepos\szakdoga\Shared\obj\Debug\net5.0\Shared.csproj.CoreCompileInputs.cac
 C:\GitRepos\szakdoga\Shared\obj\Debug\net5.0\Shared.dll
 C:\GitRepos\szakdoga\Shared\obj\Debug\net5.0\ref\Shared.dll
 C:\GitRepos\szakdoga\Shared\obj\Debug\net5.0\Shared.pdb
+C:\GitRepos\szakdoga\Shared\obj\Debug\net5.0\Shared.csproj.AssemblyReference.cache

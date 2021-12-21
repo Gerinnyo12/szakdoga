@@ -16,22 +16,23 @@ namespace DemoWorkerService
         readonly string WatchedDirectory;
         readonly string SearchPattern;
         Dictionary<string, Runable> DLLContainer { get; set; }
-        Dictionary<string, LoadContext> Contexts { get; set; }
+        Dictionary<string, AssemblyLoadContext> Contexts { get; set; }
         Dictionary<string, ulong> ChangeHelper { get; set; }
 
         public App(string directory, string searchPattern)
         {
             WatchedDirectory = directory;
             SearchPattern = searchPattern;
-            FileSystemWatcher = new FileSystemWatcher(WatchedDirectory)
+            FileSystemWatcher = new FileSystemWatcher(directory, searchPattern)
             {
                 EnableRaisingEvents = true,
+                //NotifyFilter = NotifyFilters.DirectoryName,
             };
             FileSystemWatcher.Created += (sender, file) => HandleDirectoryAdd(file.FullPath);
-            FileSystemWatcher.Deleted += (sender, file) => RemoveDll(file.FullPath);
-            FileSystemWatcher.Changed += ReplaceFile;
+            FileSystemWatcher.Deleted += (sender, file) => RemoveFolder(file.FullPath);
+            FileSystemWatcher.Changed += ReplaceFolder;
             DLLContainer = new Dictionary<string, Runable>();
-            Contexts = new Dictionary<string, LoadContext>();
+            Contexts = new Dictionary<string, AssemblyLoadContext>();
             ChangeHelper = new Dictionary<string, ulong>();
             AddAlreadyExistingDlls(directory);
         }
@@ -39,7 +40,7 @@ namespace DemoWorkerService
         public async Task Start()
         {
             // 584 554 530 872 evig tud futni
-            while(true)
+            while (true)
             {
                 Console.WriteLine($"{++IterationCounter}. iteracio.");
                 RunDLLs();
@@ -60,31 +61,32 @@ namespace DemoWorkerService
                 // https://stackoverflow.com/questions/1308432/do-try-catch-blocks-hurt-performance-when-exceptions-are-not-thrown
                 string path = pair.Key;
                 var runable = pair.Value;
-                try
+                if (runable.isCallable)
                 {
-                    if(runable.isCallable)
+                    try
                     {
                         await runable.InvokeRun();
                     }
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine($"  ELKAPTAM!!!!");
-                    //TODO logolni
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"\tELKAPTAM!!!!");
+                        Console.WriteLine($"\t{e.InnerException}");
+                        //TODO logolni
+                    }
                 }
             });
             //Console.WriteLine("Befejezodott a container futtatasa");
         }
-        private void ReplaceFile(object sender, FileSystemEventArgs e)
+        private void ReplaceFolder(object sender, FileSystemEventArgs e)
         {
             Console.WriteLine("\t Meghivodott a CHANGE");
             // akkor, ha toroltunk valamit, aztan visszarakjuk nem fut le az add, csak ez
             // mert ez igy csak egy modositas?
             //megkereses, torles es hozzaadas
 
-            if(!ChangeHelper.TryGetValue(e.FullPath, out var value) || value < IterationCounter)
+            if (!ChangeHelper.TryGetValue(e.FullPath, out var value) || value < IterationCounter)
             {
-                RemoveDll(e.FullPath);
+                RemoveFolder(e.FullPath);
                 HandleDirectoryAdd(e.FullPath);
             }
             else
@@ -95,7 +97,7 @@ namespace DemoWorkerService
 
         private void AddAlreadyExistingDlls(string watchedDirectory)
         {
-            foreach(var directory in Directory.GetDirectories(watchedDirectory))
+            foreach (var directory in Directory.GetDirectories(watchedDirectory))
             {
                 HandleDirectoryAdd(directory);
             }
@@ -108,9 +110,8 @@ namespace DemoWorkerService
             Directory.CreateDirectory(destinationDirectory);
             try
             {
-                //TODO
                 string filePath = Directory.GetFiles(sourceDirectoryPath, directoryName + ".dll", SearchOption.AllDirectories).FirstOrDefault();
-                if(filePath != null)
+                if (filePath != null)
                 {
                     string fileName = Path.GetFileName(filePath);
                     string destinationFileName = Path.Combine(destinationDirectory, fileName);
@@ -118,8 +119,8 @@ namespace DemoWorkerService
                     AddDLLToContainer(destinationFileName, sourceDirectoryPath);
                 }
             }
-            //TODO
-            catch(Exception e) { }
+            //TODO fail eseten logolni || kitorolni
+            catch (Exception ex) { }
         }
 
         private bool AddDLLToContainer(string filePathToLoad, string modifiableFilePath)
@@ -127,14 +128,13 @@ namespace DemoWorkerService
             try
             {
                 Console.WriteLine("\t Meghivodott az ADD");
-                AssemblyLoadContext context = new(null, true);
+                AssemblyLoadContext loadContext = new(null, true);
                 Assembly assembly = null;
-                bool isLoaded = ReadAssembly(context, ref assembly, filePathToLoad, modifiableFilePath);
+                bool isLoaded = ReadAssembly(loadContext, ref assembly, filePathToLoad, modifiableFilePath);
                 var runable = new Runable();
                 bool isCreated = isLoaded && assembly != null && runable.CreateRunableInstance(assembly);
-                if(isCreated)
+                if (isCreated)
                 {
-                    var loadContext = new LoadContext(context, assembly);
                     Contexts.Add(modifiableFilePath, loadContext);
                     DLLContainer.Add(modifiableFilePath, runable);
                     ChangeHelper[modifiableFilePath] = IterationCounter + 1;
@@ -142,7 +142,9 @@ namespace DemoWorkerService
                     return true;
                 }
             }
-            catch(Exception ex) { }
+            catch (Exception ex)
+            {
+            }
             return false;
         }
 
@@ -156,29 +158,29 @@ namespace DemoWorkerService
             int numOfTries = 0;
             // TODO exe handeling
             bool success = true;
-            while(!done && numOfTries < 10)
+            while (!done && numOfTries < 10)
             {
                 try
                 {
                     // bekerulhet kozben, ezert mindig a frisset kell lekerni
-                    if(!AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName.StartsWith($"{Path.GetFileNameWithoutExtension(filePathToLoad)}, ")))
+                    if (!AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName.StartsWith($"{Path.GetFileNameWithoutExtension(filePathToLoad)}, ")))
                     {
-                        if(assemblyToLoadIn == null)
+                        if (assemblyToLoadIn == null)
                         {
                             assemblyToLoadIn = loadContext.LoadFromAssemblyPath(filePathToLoad);
                         }
                         success = true;
                         Assembly assembly = null;
-                        foreach(var reference in assemblyToLoadIn.GetReferencedAssemblies())
+                        foreach (var reference in assemblyToLoadIn.GetReferencedAssemblies())
                         {
                             var dllPath = Directory.GetFiles(directoryToSearchFrom, reference.Name + ".dll", SearchOption.AllDirectories).FirstOrDefault();
-                            if(dllPath != null)
+                            if (dllPath != null)
                             {
                                 string fileName = Path.GetFileName(dllPath);
                                 string directoryName = Path.GetFileName(directoryToSearchFrom);
                                 filePathToLoad = Path.Combine(LOCAL_DLL_RUNNER_DIR, directoryName, fileName);
                                 File.Copy(dllPath, filePathToLoad, true);
-                                if(!ReadAssembly(loadContext, ref assembly, filePathToLoad, directoryToSearchFrom))
+                                if (!ReadAssembly(loadContext, ref assembly, filePathToLoad, directoryToSearchFrom))
                                 {
                                     success = false;
                                 }
@@ -188,7 +190,7 @@ namespace DemoWorkerService
                     }
                     done = true;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     success = false;
                     Console.WriteLine($"{numOfTries + 1}. proba");
@@ -200,39 +202,30 @@ namespace DemoWorkerService
             return success;
         }
 
-        private void RemoveDll(string directoryPath)
+        private void RemoveFolder(string directoryPath)
         {
             // ha ebben benne van, akkor mind a masik kettoben is
-            if(Contexts.TryGetValue(directoryPath, out var context))
+            if (Contexts.TryGetValue(directoryPath, out var context))
             {
-                try
-                {
-                    ChangeHelper.Remove(directoryPath);
-                    DLLContainer[directoryPath].RemoveReferences();
-                    DLLContainer.Remove(directoryPath);
-                    context.Assembly = null;
-                    Contexts.Remove(directoryPath);
-                    context.Context.Unload();
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                    string directoryName = Path.GetFileName(directoryPath);
-                    string directoryToDelete = Path.Combine(LOCAL_DLL_RUNNER_DIR, directoryName);
-                    Directory.Delete(directoryToDelete, true);
-                    Console.WriteLine($"\t - {Path.GetFileName(directoryPath)}");
-                }
-                //TODO
-                catch(Exception ex)
-                {
-                    Console.WriteLine("\t Ajaj");
-                }
+                ChangeHelper.Remove(directoryPath);
+                DLLContainer[directoryPath].RemoveReferences();
+                DLLContainer.Remove(directoryPath);
+                Contexts.Remove(directoryPath);
+                context.Unload();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                string directoryName = Path.GetFileName(directoryPath);
+                string directoryToDelete = Path.Combine(LOCAL_DLL_RUNNER_DIR, directoryName);
+                Directory.Delete(directoryToDelete, true);
+                Console.WriteLine($"\t - {Path.GetFileName(directoryPath)}");
             }
             else
             {
                 Console.WriteLine("\t NEM VOLT MIT KITOROLNI");
             }
-
         }
+
     }
 }

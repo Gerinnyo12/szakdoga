@@ -10,7 +10,7 @@ namespace DemoWorkerService
 {
     public class App
     {
-        private const string LOCAL_DLL_RUNNER_DIR = @"C:\GitRepos\szakdoga\Running_Dlls";
+        private const string LOCAL_DLL_RUNNER_DIR = @"C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\Running_Dlls";
         public static ulong IterationCounter { get; set; } = 0;
         readonly FileSystemWatcher FileSystemWatcher;
         readonly string WatchedDirectory;
@@ -26,7 +26,6 @@ namespace DemoWorkerService
             FileSystemWatcher = new FileSystemWatcher(directory, searchPattern)
             {
                 EnableRaisingEvents = true,
-                //NotifyFilter = NotifyFilters.DirectoryName,
             };
             FileSystemWatcher.Created += (sender, file) => HandleDirectoryAdd(file.FullPath);
             FileSystemWatcher.Deleted += (sender, file) => RemoveFolder(file.FullPath);
@@ -105,6 +104,8 @@ namespace DemoWorkerService
 
         private void HandleDirectoryAdd(string sourceDirectoryPath)
         {
+            Console.WriteLine("\t Meghivodott a HANDLE");
+            Console.WriteLine("\t " + sourceDirectoryPath);
             string directoryName = Path.GetFileName(sourceDirectoryPath);
             string destinationDirectory = Path.Combine(LOCAL_DLL_RUNNER_DIR, directoryName);
             Directory.CreateDirectory(destinationDirectory);
@@ -117,6 +118,10 @@ namespace DemoWorkerService
                     string destinationFileName = Path.Combine(destinationDirectory, fileName);
                     File.Copy(filePath, destinationFileName, true);
                     AddDLLToContainer(destinationFileName, sourceDirectoryPath);
+                }
+                else
+                {
+                    Console.WriteLine("\t NULL VOLT A FILEPATH");
                 }
             }
             //TODO fail eseten logolni || kitorolni

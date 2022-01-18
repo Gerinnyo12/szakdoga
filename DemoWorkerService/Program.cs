@@ -7,7 +7,7 @@ namespace DemoWorkerService
     {
         static async Task Main(string[] args)
         {
-            await new App( @"C:\Users\reveszg\Desktop\Watched_Folder", "*").Start();
+            await new App(@"C:\Users\Gerinnyo12\Desktop\Watched_Folder", "*").Start();
         }
     }
 }

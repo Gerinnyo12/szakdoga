@@ -24,6 +24,7 @@ namespace DemoWorkerService
             _mainFileName = _rootDirectoryName;
             LoadContext = new(null, true);
             MainAssembly = null;
+            Runable = new Runable();
         }
 
         public bool LoadAssemblies()
@@ -44,7 +45,6 @@ namespace DemoWorkerService
             }
 
             MainAssembly = assembly;
-            Runable = new Runable();
             bool isCreated = Runable.CreateRunableInstance(assembly);
             if (!isCreated)
             {
@@ -76,7 +76,9 @@ namespace DemoWorkerService
                 foreach (var referencedAssembly in assembly.GetReferencedAssemblies())
                 {
                     string referenceAssemblyPath = FileHelper.CheckAndCopyDllToRunnerDir(_rootDirectoryName, referencedAssembly.Name);
-                    if (referenceAssemblyPath == null)
+                    //TODO EZ IGY CSUNYA
+                    //EZ IGY MOST NULLT IS KAPHAT ES AZT PROBALJA MAJD BETOLTENI..
+                    if (referenceAssemblyPath == null && AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName.StartsWith($"{Path.GetFileNameWithoutExtension(referenceAssemblyPath)}, ")))
                     {
                         continue;
                     }
@@ -117,6 +119,11 @@ namespace DemoWorkerService
             GC.WaitForPendingFinalizers();
             GC.Collect();
             GC.WaitForPendingFinalizers();
+            DeleteFolders();
+        }
+
+        private void DeleteFolders()
+        {
             string runnerDirectoryPath = FileHelper.GetRunnerDirectory(_rootDirectoryName);
             FileHelper.DeleteDirectoryContent(runnerDirectoryPath, true);
             FileHelper.DeleteDirectoryContent(_rootDirectoryPath, true);

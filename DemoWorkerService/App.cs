@@ -31,7 +31,7 @@ namespace DemoWorkerService
             FileSystemWatcher.Created += (sender, file) => HandleFileInsert(file.FullPath);
             FileSystemWatcher.Deleted += (sender, file) => RemoveFile(file.FullPath);
             //FileSystemWatcher.Changed += ReplaceFile;
-            LoadContexts = new();  //Contexts = new Dictionary<string, AssemblyLoadContext>();
+            LoadContexts = new();
             //ChangeHelper = new();  //ChangeHelper = new Dictionary<string, ulong>();
             FileHelper.ClearDirectories();
             AddExisting();
@@ -60,7 +60,7 @@ namespace DemoWorkerService
                 // https://stackoverflow.com/questions/1308432/do-try-catch-blocks-hurt-performance-when-exceptions-are-not-thrown
                 string path = keyValuePair.Key;
                 var runable = keyValuePair.Value.Runable;
-                if (runable.isCallable)
+                if (runable.IsCallable)
                 {
                     try
                     {
@@ -111,6 +111,9 @@ namespace DemoWorkerService
             {
                 // vagy tul sok ideig masolodott,
                 // vagy nem pont 1 db megfelelo nevu file volt benne
+                //TODO LOGOLNI
+                Console.WriteLine($"Vagy tul sok ideig masolodott");
+                Console.WriteLine($"Vagy nem pont 1 db megfelelo nevu file volt benne");
                 return;
             }
 
@@ -119,11 +122,12 @@ namespace DemoWorkerService
             if (!isLoaded)
             {
                 //ha nem sikerult az ossze assembly betoltese
+                //TODO LOGOLNI
+                Console.WriteLine($"Nem sikerult az ossze assembly betoltese");
                 return;
             }
 
             LoadContexts.Add(zipPath, context);
-
         }
 
         private void RemoveFile(string fileToDelete)

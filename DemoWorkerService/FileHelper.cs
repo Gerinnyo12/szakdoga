@@ -46,7 +46,7 @@ namespace DemoWorkerService
             catch (Exception ex)
             {
                 //TODO LOG
-                Console.WriteLine($"Pontosan 1 db {fileName} nevű file-nak kell léteznie");
+                Console.WriteLine($"Pontosan 1 db {fileName} nevű file-nak kell léteznie a {directoryName} nevu mappaban");
             }
             return null;
         }

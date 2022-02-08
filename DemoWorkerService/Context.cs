@@ -56,42 +56,44 @@ namespace DemoWorkerService
 
         private Assembly IterateAndLoadAssemblyRecursively(string filePathToLoad)
         {
-            //TODO visszateresi ertek
             // https://social.msdn.microsoft.com/Forums/en-US/caba700d-1011-4c48-8a39-e9513c81baad/delete-dll-wo-closing-the-application?forum=csharplanguage
             // https://stackoverflow.com/questions/18362368/loading-dlls-at-runtime-in-c-sharp
             // https://docs.microsoft.com/en-us/dotnet/core/porting/net-framework-tech-unavailable
+            // https://stackoverflow.com/questions/34549641/async-await-vs-getawaiter-getresult-and-callback
 
-            string assemblyName = Path.GetFileNameWithoutExtension(filePathToLoad);
-            // bekerulhet kozben, ezert mindig a frisset kell lekerni
-            // TODO EZ IGY CSUNYA
-            if (!AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName.StartsWith($"{assemblyName}, ")))
+            Assembly assembly = LoadAssemblyIntoContext(filePathToLoad);
+
+            if (assembly == null)
             {
-                Assembly assembly = LoadAssemblyIntoContext(filePathToLoad);
+                ////TODO LOGOLNI
+                //Console.WriteLine($"Nem volt a {_rootDirectoryName} nevu mappaban ");
+                return null;
+            }
 
-                if (assembly == null)
+            foreach (var referencedAssembly in assembly.GetReferencedAssemblies())
+            {
+                //mivel rekuzriv a fuggveny, ezert valtozhat 2 iteracio kozott az appdomain
+                //ezert mindig ujra ellenorizzuk
+                if (AppDomain.CurrentDomain.GetAssemblies().Any(assembly => assembly.FullName == referencedAssembly.FullName))
                 {
+                    //TODO LOGOLNI
+                    Console.WriteLine($"Mar be van toltve egy {referencedAssembly.FullName} nevu assembly");
+                    continue;
+                }
+
+                string referencedAssemblyPath = FileHelper.CheckAndCopyDllToRunnerDir(_rootDirectoryName, referencedAssembly.Name);
+                if (referencedAssemblyPath == null)
+                {
+                    //nem pontosan 1 ilyen nevu assembly volt a mappaban
                     return null;
                 }
 
-                foreach (var referencedAssembly in assembly.GetReferencedAssemblies())
+                if (IterateAndLoadAssemblyRecursively(referencedAssemblyPath) == null)
                 {
-                    string referenceAssemblyPath = FileHelper.CheckAndCopyDllToRunnerDir(_rootDirectoryName, referencedAssembly.Name);
-                    //TODO EZ IGY CSUNYA
-                    //EZ IGY MOST NULLT IS KAPHAT ES AZT PROBALJA MAJD BETOLTENI..
-                    if (referenceAssemblyPath == null && AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName.StartsWith($"{Path.GetFileNameWithoutExtension(referenceAssemblyPath)}, ")))
-                    {
-                        continue;
-                    }
-
-                    if (IterateAndLoadAssemblyRecursively(referenceAssemblyPath) == null)
-                    {
-                        return null;
-                    }
+                    return null;
                 }
-                return assembly;
             }
-            // https://stackoverflow.com/questions/34549641/async-await-vs-getawaiter-getresult-and-callback
-            return null;
+            return assembly;
         }
 
 
@@ -105,7 +107,7 @@ namespace DemoWorkerService
             catch (Exception ex)
             {
                 //TODO LOGOLNI
-                Console.WriteLine($"Nem sikerult betolteni a(z) {filePathToLoad} nevu file-t.");
+                Console.WriteLine($"Nem sikerult betolteni a(z) {filePathToLoad} utvonalu assembly-t.");
             }
             return null;
         }

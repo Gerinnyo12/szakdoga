@@ -24,14 +24,11 @@ C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\DemoWorkerService\bin\Debug\n
 C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\DemoWorkerService\bin\Debug\net5.0\DemoWorkerService.dll
 C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\DemoWorkerService\bin\Debug\net5.0\ref\DemoWorkerService.dll
 C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\DemoWorkerService\bin\Debug\net5.0\DemoWorkerService.pdb
-C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\DemoWorkerService\bin\Debug\net5.0\Shared.dll
-C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\DemoWorkerService\bin\Debug\net5.0\Shared.pdb
 C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.csproj.AssemblyReference.cache
 C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.AssemblyInfoInputs.cache
 C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.AssemblyInfo.cs
 C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.csproj.CoreCompileInputs.cache
-C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.csproj.CopyComplete
 C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.dll
 C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\DemoWorkerService\obj\Debug\net5.0\ref\DemoWorkerService.dll
 C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\DemoWorkerService\obj\Debug\net5.0\DemoWorkerService.pdb

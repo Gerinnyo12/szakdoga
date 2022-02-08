@@ -21,7 +21,7 @@ namespace DemoWorkerService
             // lefele a kovetkezo 2 hatvanyra kerekitodik
             // pl. a 8 az 2 + 4 + 8 = 14 milisec-et var
             // pl. a 7 az 2 + 4 = 6 milisec-et var
-            await new App(@"C:\Users\Gerinnyo12\Desktop\Watched_Folder", "Asd*", 1000).Start();
+            await new App(@"C:\Users\Gerinnyo12\Desktop\Watched_Folder", "*", 1000).Start();
         }
     }
 }

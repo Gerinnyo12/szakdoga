@@ -7,27 +7,14 @@
   "targets": {
     ".NETCoreApp,Version=v5.0": {
       "DemoWorkerService/1.0.0": {
-        "dependencies": {
-          "Shared": "1.0.0"
-        },
         "runtime": {
           "DemoWorkerService.dll": {}
-        }
-      },
-      "Shared/1.0.0": {
-        "runtime": {
-          "Shared.dll": {}
         }
       }
     }
   },
   "libraries": {
     "DemoWorkerService/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Shared/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

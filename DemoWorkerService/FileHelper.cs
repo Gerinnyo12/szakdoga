@@ -10,24 +10,6 @@ namespace DemoWorkerService
         public const string LOCAL_DIR = @"C:\GitRepos\szakdoga\Local";
         public const string RUNNER_DIR = @"C:\GitRepos\szakdoga\Runner";
 
-        public static string ExtractZipAndGetRootDirPath(string sourceFilePath, string destinationDirectoryName)
-        {
-            // https://stackoverflow.com/questions/10982104/wait-until-file-is-completely-written
-            string destinationDirectoryPath = Path.Combine(LOCAL_DIR, destinationDirectoryName);
-            // EZ MERGELI NEM PEDIG FELULIRJA
-            try
-            {
-                ZipFile.ExtractToDirectory(sourceFilePath, destinationDirectoryPath, true);
-                return destinationDirectoryPath;
-            }
-            catch (Exception ex)
-            {
-                //TODO LOGOLNI
-                Console.WriteLine("Nem sikerult a masolas");
-            }
-            return null;
-        }
-
         /// <summary>
         /// Megnezi, hogy a mappaban ilyen nevu dll-bol pontosan 1 db van-e.
         /// </summary>
@@ -51,33 +33,23 @@ namespace DemoWorkerService
             return null;
         }
 
-        public static void DeleteDirectoryContent(string directoryPath, bool removePath = false)
+        public static string ExtractZipAndGetRootDirPath(string sourceFilePath, string destinationDirectoryName)
         {
-            // erre azert van szukseg, mert
-            // egy .zip kocsomagolasa ossze mergeli a mar ott levo file-okkal
-            //https://stackoverflow.com/questions/1288718/how-to-delete-all-files-and-folders-in-a-directory
-            DirectoryInfo rootDirectory = new DirectoryInfo(directoryPath);
+            // https://stackoverflow.com/questions/10982104/wait-until-file-is-completely-written
+            string destinationDirectoryPath = Path.Combine(LOCAL_DIR, destinationDirectoryName);
+            // EZ MERGELI NEM PEDIG FELULIRJA
             try
             {
-                foreach (DirectoryInfo directory in rootDirectory.EnumerateDirectories())
-                {
-                    directory.Delete(true);
-                }
-                if (removePath)
-                {
-                    Directory.Delete(directoryPath, true);
-                }
+                ZipFile.ExtractToDirectory(sourceFilePath, destinationDirectoryPath, true);
+                return destinationDirectoryPath;
             }
             catch (Exception ex)
             {
                 //TODO LOGOLNI
-                Console.WriteLine($"Valszeg mar nem letezik az {directoryPath} utvonalu mappa.");
+                Console.WriteLine("Nem sikerult a masolas");
             }
-
+            return null;
         }
-
-        public static string GetRunnerDirectory(string directoryName) =>
-            Path.Combine(RUNNER_DIR, directoryName);
 
         public static bool IsFileLocked(string filePath)
         {
@@ -94,13 +66,6 @@ namespace DemoWorkerService
                 Console.WriteLine("\t MEG NEM ERKEZETT MEG A ZIP");
             }
             return true;
-        }
-
-        public static string CreateRunnerDirectory(string directoryName)
-        {
-            string directoryPath = GetRunnerDirectory(directoryName);
-            Directory.CreateDirectory(directoryPath);
-            return directoryPath;
         }
 
         /// <summary>
@@ -132,8 +97,37 @@ namespace DemoWorkerService
             return null;
         }
 
-        private static string AppendDllExtensionToFileName(string fileName) =>
-            fileName + ".dll";
+        public static string CreateRunnerDirectory(string directoryName)
+        {
+            string directoryPath = GetRunnerDirectory(directoryName);
+            Directory.CreateDirectory(directoryPath);
+            return directoryPath;
+        }
+
+        public static void DeleteDirectoryContent(string directoryPath, bool removePath = false)
+        {
+            // erre azert van szukseg, mert
+            // egy .zip kocsomagolasa ossze mergeli a mar ott levo file-okkal
+            //https://stackoverflow.com/questions/1288718/how-to-delete-all-files-and-folders-in-a-directory
+            DirectoryInfo rootDirectory = new DirectoryInfo(directoryPath);
+            try
+            {
+                foreach (DirectoryInfo directory in rootDirectory.EnumerateDirectories())
+                {
+                    directory.Delete(true);
+                }
+                if (removePath)
+                {
+                    Directory.Delete(directoryPath, true);
+                }
+            }
+            catch (Exception ex)
+            {
+                //TODO LOGOLNI
+                Console.WriteLine($"Valszeg mar nem letezik az {directoryPath} utvonalu mappa.");
+            }
+
+        }
 
         /// <summary>
         /// A kitorli a ket lokalis mappa tartalmat
@@ -144,7 +138,13 @@ namespace DemoWorkerService
             DeleteDirectoryContent(RUNNER_DIR);
         }
 
+        public static string GetRunnerDirectory(string directoryName) =>
+            Path.Combine(RUNNER_DIR, directoryName);
+
         public static string GetFileName(string path, bool withoutExtension = false) =>
             withoutExtension ? Path.GetFileNameWithoutExtension(path) : Path.GetFileName(path);
+
+        private static string AppendDllExtensionToFileName(string fileName) =>
+            fileName + ".dll";
     }
 }

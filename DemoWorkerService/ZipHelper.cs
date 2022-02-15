@@ -7,19 +7,14 @@ namespace DemoWorkerService
     public class ZipHelper
     {
         // a .zip utvonala a monitorozott mappaban
-        public readonly string ZipPath;
-
+        private readonly string _zipPath;
         private readonly string _rootDirectoryName;
-
-        private readonly string _startingFileName;
-
         private readonly int _maxCopyTimeInMiliSec;
 
         public ZipHelper(string zipPath)
         {
-            ZipPath = zipPath;
-            _rootDirectoryName = Path.GetFileNameWithoutExtension(zipPath);
-            _startingFileName = _rootDirectoryName;
+            _zipPath = zipPath;
+            _rootDirectoryName = FileHelper.GetFileName(zipPath, withoutExtension: true);
             _maxCopyTimeInMiliSec = App.MaxCopyTimeInMiliSec;
         }
 
@@ -30,13 +25,14 @@ namespace DemoWorkerService
                 return null;
             }
 
-            string rootDirectoryPath = FileHelper.ExtractZipAndGetRootDirPath(ZipPath, _rootDirectoryName);
+            string rootDirectoryPath = FileHelper.ExtractZipAndGetRootDirPath(_zipPath, _rootDirectoryName);
             if (rootDirectoryPath == null)
             {
                 return null;
             }
 
-            if (FileHelper.GetSingleFileInFolder(_rootDirectoryName, _startingFileName) == null)
+            string fileName = _rootDirectoryName;
+            if (FileHelper.GetSingleFileInFolder(_rootDirectoryName, fileName) == null)
             {
                 FileHelper.DeleteDirectoryContent(rootDirectoryPath, true);
                 return null;
@@ -52,13 +48,13 @@ namespace DemoWorkerService
             while (delayCounter <= _maxCopyTimeInMiliSec && isFileLocked)
             {
                 await Task.Delay(delayCounter);
-                isFileLocked = FileHelper.IsFileLocked(ZipPath);
+                isFileLocked = FileHelper.IsFileLocked(_zipPath);
                 delayCounter *= 2;
             }
             if (isFileLocked)
             {
                 //TODO LOG 
-                Console.WriteLine($"{ZipPath} nem volt elérhető {delayCounter} milisec után sem.");
+                Console.WriteLine($"{_zipPath} nem volt elérhető {delayCounter} milisec után sem.");
                 return false;
             }
             return true;

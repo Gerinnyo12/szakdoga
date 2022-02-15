@@ -7,8 +7,8 @@ namespace DemoWorkerService
 {
     public class FileHelper
     {
-        public const string LOCAL_DIR = @"C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\Local";
-        public const string RUNNER_DIR = @"C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\Runner";
+        public const string LOCAL_DIR = @"C:\GitRepos\szakdoga\Local";
+        public const string RUNNER_DIR = @"C:\GitRepos\szakdoga\Runner";
 
         public static string ExtractZipAndGetRootDirPath(string sourceFilePath, string destinationDirectoryName)
         {
@@ -59,27 +59,25 @@ namespace DemoWorkerService
             DirectoryInfo rootDirectory = new DirectoryInfo(directoryPath);
             try
             {
-            foreach (DirectoryInfo directory in rootDirectory.EnumerateDirectories())
-            {
-                directory.Delete(true);
-            }
-            if (removePath)
-            {
-                Directory.Delete(directoryPath, true);
-            }
+                foreach (DirectoryInfo directory in rootDirectory.EnumerateDirectories())
+                {
+                    directory.Delete(true);
+                }
+                if (removePath)
+                {
+                    Directory.Delete(directoryPath, true);
+                }
             }
             catch (Exception ex)
             {
                 //TODO LOGOLNI
                 Console.WriteLine($"Valszeg mar nem letezik az {directoryPath} utvonalu mappa.");
             }
-            
+
         }
 
-        public static string GetRunnerDirectory(string directoryName)
-        {
-            return Path.Combine(RUNNER_DIR, directoryName);
-        }
+        public static string GetRunnerDirectory(string directoryName) =>
+            Path.Combine(RUNNER_DIR, directoryName);
 
         public static bool IsFileLocked(string filePath)
         {
@@ -87,20 +85,20 @@ namespace DemoWorkerService
             {
                 using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
                 {
-                    Console.WriteLine("BELEMENT A USING-BA");
+                    Console.WriteLine("MEGERKEZETT A ZIP");
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("\t LEFUTOTT A CATCH AG");
+                Console.WriteLine("\t MEG NEM ERKEZETT MEG A ZIP");
             }
             return true;
         }
 
         public static string CreateRunnerDirectory(string directoryName)
         {
-            string directoryPath = Path.Combine(RUNNER_DIR, directoryName);
+            string directoryPath = GetRunnerDirectory(directoryName);
             Directory.CreateDirectory(directoryPath);
             return directoryPath;
         }
@@ -134,10 +132,8 @@ namespace DemoWorkerService
             return null;
         }
 
-        private static string AppendDllExtensionToFileName(string fileName)
-        {
-            return fileName + ".dll";
-        }
+        private static string AppendDllExtensionToFileName(string fileName) =>
+            fileName + ".dll";
 
         /// <summary>
         /// A kitorli a ket lokalis mappa tartalmat
@@ -147,5 +143,8 @@ namespace DemoWorkerService
             DeleteDirectoryContent(LOCAL_DIR);
             DeleteDirectoryContent(RUNNER_DIR);
         }
+
+        public static string GetFileName(string path, bool withoutExtension = false) =>
+            withoutExtension ? Path.GetFileNameWithoutExtension(path) : Path.GetFileName(path);
     }
 }

@@ -8,31 +8,42 @@ namespace DemoWorkerService
 {
     public class App
     {
+        private readonly FileSystemWatcher _fileSystemWatcher;
+        private readonly string _watchedDirectory;
+        private readonly string _searchPattern;
+        private readonly Dictionary<string, Context> _loadContexts;
         public static ulong IterationCounter { get; private set; }
-        public static int MaxCopyTimeInMiliSec;
+        public static int MaxCopyTimeInMiliSec { get; private set; }
 
-        private readonly FileSystemWatcher FileSystemWatcher;
-        private readonly string WatchedDirectory;
-        private readonly string SearchPattern;
-        private Dictionary<string, Context> LoadContexts { get; set; }
-        //private Dictionary<string, ulong> ChangeHelper { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="directory">A megfigyelni valo mappa abszolut utvonala.</param>
+        /// <param name="searchPattern">
+        /// A futtatando .zip file-ok nevenek mintaja.
+        /// pl.:  mokus*  azt jelenti, hogy azokat a .zip file-okat figyelje, amik ugy kezdodnek, hogy "mokus", utana lehet barmi, es ugy vegzodnek, hogy .zip.
+        /// pl.: mukosoknakHosszuAFarka.zip.
+        /// </param>
+        /// <param name="maxCopyTimeInMiliSec">
+        /// Mennyi milisecet varjon a .zip file-ok masolasanak elkeszuleseig.
+        /// Lefele a kovetkezo 2 hatvanyra kerekitodik.
+        /// pl. a 8 az 2 + 4 + 8 = 14 milisec-et var.
+        /// pl. a 7 az 2 + 4 = 6 milisec-et var.
+        /// </param>
         public App(string directory, string searchPattern, int maxCopyTimeInMiliSec)
         {
             IterationCounter = 0;
             MaxCopyTimeInMiliSec = maxCopyTimeInMiliSec;
-            WatchedDirectory = directory;
-            SearchPattern = searchPattern + ".zip";
-            FileSystemWatcher = new FileSystemWatcher(directory, searchPattern)
+            _watchedDirectory = directory;
+            _searchPattern = searchPattern + ".zip";
+            _fileSystemWatcher = new FileSystemWatcher(directory, searchPattern)
             {
                 EnableRaisingEvents = true,
                 NotifyFilter = NotifyFilters.FileName,
             };
-            FileSystemWatcher.Created += (sender, file) => HandleFileInsert(file.FullPath);
-            FileSystemWatcher.Deleted += (sender, file) => RemoveFile(file.FullPath);
-            //FileSystemWatcher.Changed += ReplaceFile;
-            LoadContexts = new();
-            //ChangeHelper = new();  //ChangeHelper = new Dictionary<string, ulong>();
+            _fileSystemWatcher.Created += (sender, file) => HandleFileInsert(file.FullPath);
+            _fileSystemWatcher.Deleted += (sender, file) => RemoveFile(file.FullPath);
+            _loadContexts = new();
             FileHelper.ClearDirectories();
             AddExisting();
         }
@@ -53,7 +64,7 @@ namespace DemoWorkerService
             // https://stackoverflow.com/questions/604831/collection-was-modified-enumeration-operation-may-not-execute
             // https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.task.run?view=net-5.0
 
-            var contexts = LoadContexts.ToList();
+            var contexts = _loadContexts.ToList();
             Parallel.ForEach(contexts, async keyValuePair =>
             {
                 // https://docs.microsoft.com/en-us/dotnet/standard/parallel-programming/how-to-handle-exceptions-in-parallel-loops
@@ -76,27 +87,9 @@ namespace DemoWorkerService
             });
         }
 
-        //private void ReplaceFile(object sender, FileSystemEventArgs e)
-        //{
-        //    Console.WriteLine("\t Meghivodott a CHANGE");
-        //    // akkor, ha toroltunk valamit, aztan visszarakjuk nem fut le az add, csak ez
-        //    // mert ez igy csak egy modositas?
-        //    //megkereses, torles es hozzaadas
-
-        //    if (!ChangeHelper.TryGetValue(e.FullPath, out var value) || value < IterationCounter)
-        //    {
-        //        RemoveFile(e.FullPath);
-        //        HandleFileInsert(e.FullPath);
-        //    }
-        //    else
-        //    {
-        //        Console.WriteLine("\t Nem futott le a change");
-        //    }
-        //}
-
         private void AddExisting()
         {
-            foreach (var zipPath in Directory.GetFiles(WatchedDirectory, SearchPattern, SearchOption.TopDirectoryOnly))
+            foreach (var zipPath in Directory.GetFiles(_watchedDirectory, _searchPattern, SearchOption.TopDirectoryOnly))
             {
                 HandleFileInsert(zipPath);
             }
@@ -127,19 +120,20 @@ namespace DemoWorkerService
                 return;
             }
 
-            LoadContexts.Add(zipPath, context);
+            _loadContexts.Add(zipPath, context);
+            Console.WriteLine($"{zipPath} sikeresen hozza lett adva!");
         }
 
         private void RemoveFile(string fileToDelete)
         {
-            if (!LoadContexts.TryGetValue(fileToDelete, out var context))
+            if (!_loadContexts.TryGetValue(fileToDelete, out var context))
             {
                 Console.WriteLine("\t NEM VOLT MIT KITOROLNI");
                 return;
             }
 
             context.UnloadContext();
-            LoadContexts.Remove(fileToDelete);
+            _loadContexts.Remove(fileToDelete);
             Console.WriteLine($"\t - {Path.GetFileName(fileToDelete)}");
         }
 

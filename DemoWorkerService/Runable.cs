@@ -7,11 +7,10 @@ namespace DemoWorkerService
 {
     public class Runable
     {
-        // The access level for class members and struct members, including nested classes and structs, is private by default -- Gugli
-        private object Instance;
-        private MethodInfo RunMethod;
-        private uint Timer;
-        private ulong StartedAt;
+        private object _instance;
+        private MethodInfo _runMethod;
+        private uint _timer;
+        private ulong _startedAt;
         public bool IsCallable { get; private set; }
 
         public bool CreateRunableInstance(Assembly assembly)
@@ -36,10 +35,10 @@ namespace DemoWorkerService
                 {
                     return false;
                 }
-                Instance = instance;
-                RunMethod = runMethod;
-                Timer = timer;
-                StartedAt = App.IterationCounter + 1;
+                _instance = instance;
+                _runMethod = runMethod;
+                _timer = timer;
+                _startedAt = App.IterationCounter + 1;
                 IsCallable = true;
                 return true;
             }
@@ -51,10 +50,7 @@ namespace DemoWorkerService
             return false;
         }
 
-        private bool CanStartRun()
-        {
-            return (App.IterationCounter - StartedAt) % Timer == 0;
-        }
+        private bool CanStartRun() => (App.IterationCounter - _startedAt) % _timer == 0;
 
         public async Task<bool> InvokeRun()
         {
@@ -64,7 +60,7 @@ namespace DemoWorkerService
             }
             IsCallable = false;
             // amig nem futott le, addig nem lehet megegyszer mehivni
-            await (Task)RunMethod.Invoke(Instance, Array.Empty<object>());
+            await (Task)_runMethod.Invoke(_instance, Array.Empty<object>());
             IsCallable = true;
             return true;
         }
@@ -72,8 +68,8 @@ namespace DemoWorkerService
         public void RemoveReferences()
         {
             IsCallable = false;
-            Instance = null;
-            RunMethod = null;
+            _instance = null;
+            _runMethod = null;
         }
 
     }

@@ -1,10 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "jLTupTYJxfeRzb7lu4SBvE0FW9I+s4P+bv2WcwpYfSeqanAs2HWsXfgor3IFW1Y3qw80+9fb2zPBdAaXt9D5sQ==",
+  "dgSpecHash": "I4NDUuyego+XQ+mJb57Bdw63C+oM40qisHwJnXrFH1rXYIpsn0P8RLYqSlV55MUcT4V8k+sA1tg7/uSRQOaaNA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\DemoWorkerService\\DemoWorkerService.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\Gerinnyo12\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.12\\microsoft.netcore.app.host.win-x64.5.0.12.nupkg.sha512"
-  ],
+  "projectFilePath": "C:\\GitRepos\\szakdoga\\DemoWorkerService\\DemoWorkerService.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }

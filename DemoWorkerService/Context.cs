@@ -8,22 +8,17 @@ namespace DemoWorkerService
 {
     public class Context
     {
-        public AssemblyLoadContext LoadContext { get; }
-        public Assembly MainAssembly { get; private set; }
-        public Runable Runable { get; set; }
-
         private readonly string _rootDirectoryPath;
         private readonly string _rootDirectoryName;
-        private readonly string _mainFileName;
+        private readonly AssemblyLoadContext _loadContext;
+        public Runable Runable { get; }
 
         // a kicsomagolasi mappa utvonala
         public Context(string rootDirectoryPath)
         {
             _rootDirectoryPath = rootDirectoryPath;
-            _rootDirectoryName = Path.GetFileName(_rootDirectoryPath);
-            _mainFileName = _rootDirectoryName;
-            LoadContext = new(null, true);
-            MainAssembly = null;
+            _rootDirectoryName = FileHelper.GetFileName(rootDirectoryPath);
+            _loadContext = new(null, true);
             Runable = new Runable();
         }
 
@@ -31,20 +26,20 @@ namespace DemoWorkerService
         {
             _ = FileHelper.CreateRunnerDirectory(_rootDirectoryName);
 
-            string filePath = FileHelper.CheckAndCopyDllToRunnerDir(_rootDirectoryName, _mainFileName);
+            string fileName = _rootDirectoryName;
+            string filePath = FileHelper.CheckAndCopyDllToRunnerDir(_rootDirectoryName, fileName);
             if (filePath == null)
             {
                 return false;
             }
 
-            Assembly assembly = IterateAndLoadAssemblyRecursively(filePath);
+            Assembly assembly = HandleLoadWithReferences(filePath);
             if (assembly == null)
             {
                 UnloadContext();
                 return false;
             }
 
-            MainAssembly = assembly;
             bool isCreated = Runable.CreateRunableInstance(assembly);
             if (!isCreated)
             {
@@ -54,7 +49,7 @@ namespace DemoWorkerService
             return true;
         }
 
-        private Assembly IterateAndLoadAssemblyRecursively(string filePathToLoad)
+        private Assembly HandleLoadWithReferences(string filePathToLoad)
         {
             // https://social.msdn.microsoft.com/Forums/en-US/caba700d-1011-4c48-8a39-e9513c81baad/delete-dll-wo-closing-the-application?forum=csharplanguage
             // https://stackoverflow.com/questions/18362368/loading-dlls-at-runtime-in-c-sharp
@@ -66,7 +61,6 @@ namespace DemoWorkerService
             if (assembly == null)
             {
                 ////TODO LOGOLNI
-                //Console.WriteLine($"Nem volt a {_rootDirectoryName} nevu mappaban ");
                 return null;
             }
 
@@ -88,7 +82,7 @@ namespace DemoWorkerService
                     return null;
                 }
 
-                if (IterateAndLoadAssemblyRecursively(referencedAssemblyPath) == null)
+                if (HandleLoadWithReferences(referencedAssemblyPath) == null)
                 {
                     return null;
                 }
@@ -101,7 +95,7 @@ namespace DemoWorkerService
         {
             try
             {
-                Assembly assembly = LoadContext.LoadFromAssemblyPath(filePathToLoad);
+                Assembly assembly = _loadContext.LoadFromAssemblyPath(filePathToLoad);
                 return assembly;
             }
             catch (Exception ex)
@@ -115,8 +109,7 @@ namespace DemoWorkerService
         public void UnloadContext()
         {
             Runable.RemoveReferences();
-            MainAssembly = null;
-            LoadContext.Unload();
+            _loadContext.Unload();
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();

@@ -1,10 +1,8 @@
-﻿using System.Threading.Tasks;
-
-namespace Shared
+﻿namespace Shared
 {
     public interface IWorkerTask
     {
-        uint Timer { get; set; }
+        uint Timer { get; }
         public Task Run();
     }
 }

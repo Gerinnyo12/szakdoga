@@ -1,0 +1,24 @@
+﻿@page "/"
+
+<PageTitle>Scheduler</PageTitle>
+
+<p>
+    Helo World
+    <button @onclick=Callback>Press me!</button>
+</p>
+
+@code {
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+
+    private async void Callback()
+    {
+        await JSRuntime.SuccessAlert("Siker", "Mukodik???");
+        await JSRuntime.ErrorAlert("Ajaj", "Nem mukodik???");
+    }
+
+    //TODO
+    // feluleten elinditani/leallitani a service-t controllerrel
+    // tcp listenerrel 
+
+}

@@ -70,7 +70,7 @@ namespace Service.Components
             }
             catch (Exception ex)
                 {
-                LogWriter.Log(LogLevel.Error, $"A(z) {_instance.GetType()} hibat dobott futas kozben, de el lett kapva: {ex.Message}");
+                LogWriter.Log(LogLevel.Error, $"A(z) {_instance.GetType()} hibat dobott futas kozben: {ex.Message}");
             }
             finally
             {
@@ -81,6 +81,7 @@ namespace Service.Components
 
         public void UnleashReferences()
         {
+            //TODO KELLENEK E EZEK A REFERENCIA ELENGEDESEK?
             IsCurrentlyRunning = false;
             //ez miatt kell nullable-nek lennie
             _instance = null;

@@ -11,9 +11,9 @@ using IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
     {
         services.AddHostedService<Scheduler>();
-        services.AddSingleton<ILogWriter, LogWriter>();
         services.AddSingleton<string[]>(args);
         services.AddSingleton<IApp, App>();
+        services.AddSingleton<ILogWriter, LogWriter>();
     })
     .Build();
 

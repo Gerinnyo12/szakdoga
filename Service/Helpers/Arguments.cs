@@ -12,7 +12,7 @@ namespace Service.Components
             {
                 throw new ArgumentNullException($"Az argumentumok száma nem {ARGS_NUM}");
             }
-            if (!FileHandler.DirectoryExists(args[0]))
+            if (!FileHelper.DirExists(args[0]))
             {
                 throw new ArgumentException($"Nem létezik a(z) {args[1]} mappa");
             }

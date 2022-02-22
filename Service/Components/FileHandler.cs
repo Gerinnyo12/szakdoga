@@ -3,174 +3,66 @@ using System.IO.Compression;
 
 namespace Service.Helpers
 {
-
-    //TODO
-    //AZ OSZTALYPELDANYNAK SAJAT ADATTAGJAI ALAPJAN REDUKALNI A PARAMETEREK MENNYISEGET
-
     public class FileHandler : IFileHandler
     {
-        private readonly string _localDir;
-        private readonly string _runnerDir;
+        private readonly string _rootDirName;
 
-        public FileHandler()
+        public FileHandler(string rootDirPath)
         {
-            string currentDir = Directory.GetCurrentDirectory();
-            _localDir = Path.Combine(currentDir, "Local");
-            Console.WriteLine("A FileHelper local utvonala: " + _localDir);
-            if (!DirectoryExists(_localDir))
-            {
-                Directory.CreateDirectory(_localDir);
-            }
-            _runnerDir = Path.Combine(currentDir, "Runner");
-            if (!DirectoryExists(_runnerDir))
-            {
-                Directory.CreateDirectory(_runnerDir);
-            }
+            _rootDirName = FileHelper.GetFileName(rootDirPath, withoutExtension: true);
         }
 
-        public bool DirectoryExists(string path) => Directory.Exists(path);
-        public bool FileExists(string path) => File.Exists(path);
-
-        /// <summary>
-        /// Megnezi, hogy a mappaban ilyen nevu dll-bol pontosan 1 db van-e.
-        /// </summary>
-        /// <param name="directoryName">A mappa, amiben keres</param>
-        /// <param name="fileName">A file neve, amit keres (.dll kiterjesztes nelkul)</param>
-        /// <returns>A dll file abszolut utvonalat, vagy null-t, ha nem pontosan 1 van.</returns>
-        public string? IsFileSingleInFolder(string directoryName, string fileName)
+        public bool CreateRunnerDir()
         {
+            string dirPath = FileHelper.CombinePaths(FileHelper.RunnerDir, _rootDirName);
             try
             {
-                string directoryPath = Path.Combine(_localDir, directoryName);
-                string dllName = AppendDllExtensionToFileName(fileName);
-                string filePath = Directory.GetFiles(directoryPath, dllName, SearchOption.AllDirectories).Single();
-                return filePath;
-            }
-            catch (Exception ex)
-            {
-                //TODO LOG
-                Console.WriteLine($"Pontosan 1 db {fileName} nevű file-nak kell léteznie a {directoryName} nevu mappaban");
-            }
-            return null;
-        }
-
-        public string? ExtractZipAndGetRootDirPath(string sourceFilePath, string destinationDirectoryName)
-        {
-            // https://stackoverflow.com/questions/10982104/wait-until-file-is-completely-written
-            string destinationDirectoryPath = Path.Combine(_localDir, destinationDirectoryName);
-            // EZ MERGELI NEM PEDIG FELULIRJA
-            try
-            {
-                ZipFile.ExtractToDirectory(sourceFilePath, destinationDirectoryPath, true);
-                return destinationDirectoryPath;
-            }
-            catch (Exception ex)
-            {
-                //TODO LOGOLNI
-                Console.WriteLine("Nem sikerult a kicsomagolas");
-            }
-            return null;
-        }
-
-        public bool IsFileLocked(string filePath)
-        {
-            try
-            {
-                using FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
-                return false;
-            }
-            catch (Exception ex)
-            {
-                //TODO LOGOLNI HA NEM AZZAL VAN A BAJ, HOGY NEM ELERHETO A FILE
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Megnezi, hogy pontosan 1 ilyen nevu .dll van-e a mappaban, es a local-bol a runner-be masolja azt.
-        /// </summary>
-        /// <param name="directoryName"></param>
-        /// <param name="fileName"></param>
-        /// <returns>A masolt file helye, vagy null, ha nem pontosan 1 ilyen nevu .dll volt.</returns>
-        public string? CheckAndCopyDllToRunnerDir(string directoryName, string fileName)
-        {
-            string? sourceFilePath = IsFileSingleInFolder(directoryName, fileName);
-            if (sourceFilePath == null)
-            {
-                return null;
-            }
-
-            string dllName = AppendDllExtensionToFileName(fileName);
-            string destinationFilePath = Path.Combine(_runnerDir, directoryName, dllName);
-            try
-            {
-                File.Copy(sourceFilePath, destinationFilePath, true);
-                return destinationFilePath;
-            }
-            catch (Exception ex)
-            {
-                //TODO LOGOLNI
-                Console.WriteLine("Nem sikerult a masolas :(");
-            }
-            return null;
-        }
-
-        public bool CreateRunnerDirectory(string directoryName)
-        {
-            string directoryPath = GetRunnerDirectory(directoryName);
-            try
-            {
-                Directory.CreateDirectory(directoryPath);
+                FileHelper.CreateDir(dirPath);
                 return true;
             }
             catch (Exception ex)
             {
-                LogWriter.Log(LogLevel.Error, $"Nem sikerult a(z) {directoryName} nevu mappa letrehozasa.");
+                LogWriter.Log(LogLevel.Error, $"Nem sikerult a(z) {dirPath} nevu mappa letrehozasa: {ex.Message}");
             }
             return false;
         }
 
-        public void DeleteDirectoryContent(string directoryPath, bool removePath = false)
+        public string? CopyDllToRunnerDir(string fileName)
         {
-            // erre azert van szukseg, mert
-            // egy .zip kocsomagolasa ossze mergeli a mar ott levo file-okkal
-            //https://stackoverflow.com/questions/1288718/how-to-delete-all-files-and-folders-in-a-directory
-            DirectoryInfo rootDirectory = new(directoryPath);
+            string dllName = FileHelper.AppendDllExtensionToFileName(fileName);
+            string? fromFilePath = GetFilePath(dllName);
+            if (fromFilePath == null)
+            {
+                return null;
+            }
+
+            string toFilePath = FileHelper.CombinePaths(FileHelper.RunnerDir, _rootDirName, dllName);
             try
             {
-                foreach (DirectoryInfo directory in rootDirectory.EnumerateDirectories())
-                {
-                    directory.Delete(true);
-                }
-                if (removePath)
-                {
-                    Directory.Delete(directoryPath, true);
-                }
+                FileHelper.CopyFile(fromFilePath, toFilePath);
+                return toFilePath;
             }
             catch (Exception ex)
             {
-                //TODO LOGOLNI
-                Console.WriteLine($"Valszeg mar nem letezik az {directoryPath} utvonalu mappa.");
+                LogWriter.Log(LogLevel.Error, $"Nem sikerult a(z) {dllName} nevu file masolasa {fromFilePath}-bol {toFilePath}-ba: {ex.Message}");
             }
-
+            return null;
         }
 
-        /// <summary>
-        /// A kitorli a ket lokalis mappa tartalmat
-        /// </summary>
-        public void ClearDirectories()
+        private string? GetFilePath(string dllName)
         {
-            DeleteDirectoryContent(_localDir);
-            DeleteDirectoryContent(_runnerDir);
+            try
+            {
+                string dirPath = FileHelper.CombinePaths(FileHelper.LocalDir, _rootDirName);
+                string filePath = FileHelper.GetSingleFile(dirPath, dllName);
+                return filePath;
+            }
+            catch (Exception ex)
+            {
+                LogWriter.Log(LogLevel.Error, $"Pontosan 1 db {dllName} nevű file-nak kell léteznie a {_rootDirName} nevu mappaban: {ex.Message}");
+            }
+            return null;
         }
 
-        public string GetRunnerDirectory(string directoryName) =>
-            Path.Combine(_runnerDir, directoryName);
-
-        public string GetFileName(string path, bool withoutExtension = false) =>
-            withoutExtension ? Path.GetFileNameWithoutExtension(path) : Path.GetFileName(path);
-
-        private string AppendDllExtensionToFileName(string fileName) =>
-            fileName + ".dll";
     }
 }

@@ -13,7 +13,6 @@ namespace Service.Components
         private readonly string _watchedDirectory;
         private readonly string _searchPattern;
         private readonly Dictionary<string, IAssemblyContext> _loadContexts;
-        private readonly IFileHandler _fileHandler;
         private int MaxCopyTimeInMiliSec { get; set; }
         public static ulong IterationCounter { get; private set; }
 
@@ -29,8 +28,6 @@ namespace Service.Components
             _fileSystemWatcher.Created += (sender, file) => OnFileAdd(file.FullPath);
             _fileSystemWatcher.Deleted += (sender, file) => OnFileDelete(file.FullPath);
             _loadContexts = new();
-            _fileHandler = new FileHandler();
-            FileHandler.ClearDirectories();
             AddExisting();
         }
 
@@ -62,14 +59,14 @@ namespace Service.Components
 
         private async void OnFileAdd(string zipPath)
         {
-            IZipExtractor zipHandler = new ZipExtractor(zipPath, MaxCopyTimeInMiliSec);
-            string? rootDirectoryPath = await zipHandler.ExtractZip();
-            if (rootDirectoryPath == null)
+            IZipHandler zipHandler = new ZipHandler(zipPath, MaxCopyTimeInMiliSec);
+            string? rootDirPath = await zipHandler.ExtractZip();
+            if (rootDirPath == null)
             {
                 return;
             }
 
-            IAssemblyContext context = new AssemblyContext(rootDirectoryPath);
+            IAssemblyContext context = new AssemblyContext(rootDirPath);
             bool isLoaded = context.LoadAssemblies();
             if (!isLoaded)
             {
@@ -84,13 +81,13 @@ namespace Service.Components
         {
             if (!_loadContexts.TryGetValue(fileToDelete, out var context))
             {
-                LogWriter.Log(LogLevel.Information, $"A(z) {FileHandler.GetFileName(fileToDelete)} alapbol nem volt hozzaadva.");
+                LogWriter.Log(LogLevel.Information, $"A(z) {FileHelper.GetFileName(fileToDelete)} alapbol nem volt hozzaadva.");
                 return;
             }
 
             context.UnloadContext();
             _loadContexts.Remove(fileToDelete);
-            LogWriter.Log(LogLevel.Information, $"A(z) {FileHandler.GetFileName(fileToDelete)} sikeresen ki lett torolve.");
+            LogWriter.Log(LogLevel.Information, $"A(z) {FileHelper.GetFileName(fileToDelete)} sikeresen ki lett torolve.");
         }
     }
 }

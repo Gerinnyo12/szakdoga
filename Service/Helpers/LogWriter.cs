@@ -4,13 +4,17 @@ namespace Service.Helpers
 {
     public class LogWriter : ILogWriter
     {
-        private ILogger<LogWriter>? _logger;
+        private ILogger<ILogWriter>? _logger;
 
         private static ILogWriter? _instance;
 
-        public LogWriter(ILogger<LogWriter> logger)
+        public LogWriter(ILogger<ILogWriter> logger)
         {
-            _instance = new LogWriter(logger);
+            Console.WriteLine("Lefutott az ctor...");
+            //if (_instance == null)
+            //{
+            //    _instance = new LogWriter(logger);
+            //}
         }
 
         public void WriteLog(LogLevel logLevel, string message)

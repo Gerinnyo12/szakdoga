@@ -7,9 +7,9 @@ namespace Service.Components
 {
     public class AssemblyContext : IAssemblyContext
     {
-        private readonly string _rootDirectoryPath;
         private readonly string _rootDirectoryName;
         private readonly AssemblyLoadContext _assemblyLoadContext;
+        private readonly IFileHandler _fileHandler;
         private static readonly Assembly[] _app_domain_default_assemblies;
         public IRunable RunableInstance { get; }
 
@@ -18,25 +18,25 @@ namespace Service.Components
             _app_domain_default_assemblies = AppDomain.CurrentDomain.GetAssemblies();
         }
 
-        // a kicsomagolasi mappa utvonala
+        // a kicsomagolasi mappa tetejenek utvonala
         public AssemblyContext(string rootDirectoryPath)
         {
-            _rootDirectoryPath = rootDirectoryPath;
-            _rootDirectoryName = FileHandler.GetFileName(rootDirectoryPath);
-            _assemblyLoadContext = new(null, true);
+            _fileHandler = new FileHandler(rootDirectoryPath);
+            _rootDirectoryName = FileHelper.GetFileName(rootDirectoryPath);
+            _assemblyLoadContext = new(_rootDirectoryName, true);
             RunableInstance = new Runable();
         }
 
         public bool LoadAssemblies()
         {
-            bool isDirCreated = FileHandler.CreateRunnerDirectory(_rootDirectoryName);
+            bool isDirCreated = _fileHandler.CreateRunnerDir();
             if (!isDirCreated)
             {
                 return false;
             }
 
-            string fileName = _rootDirectoryName;
-            string? filePath = FileHandler.CheckAndCopyDllToRunnerDir(_rootDirectoryName, fileName);
+            string entryFileName = _rootDirectoryName;
+            string? filePath = _fileHandler.CopyDllToRunnerDir(entryFileName);
             if (filePath == null)
             {
                 return false;
@@ -66,10 +66,8 @@ namespace Service.Components
             // https://stackoverflow.com/questions/34549641/async-await-vs-getawaiter-getresult-and-callback
 
             Assembly? assembly = LoadAssemblyIntoContext(filePathToLoad);
-
             if (assembly == null)
             {
-                ////TODO LOGOLNI
                 return null;
             }
 
@@ -89,7 +87,7 @@ namespace Service.Components
                     continue;
                 }
 
-                string? referencedAssemblyPath = FileHandler.CheckAndCopyDllToRunnerDir(_rootDirectoryName, referencedAssembly.Name);
+                string? referencedAssemblyPath = _fileHandler.CopyDllToRunnerDir(referencedAssembly.Name);
                 if (referencedAssemblyPath == null)
                 {
                     //nem pontosan 1 ilyen nevu assembly volt a mappaban
@@ -114,7 +112,7 @@ namespace Service.Components
             }
             catch (Exception ex)
             {
-                LogWriter.Log(LogLevel.Error, $"Nem sikerult betolteni a(z) {filePathToLoad} utvonalu assembly-t.");
+                LogWriter.Log(LogLevel.Error, $"Nem sikerult betolteni a(z) {filePathToLoad} utvonalu assembly-t: {ex.Message}");
             }
             return null;
         }
@@ -127,14 +125,22 @@ namespace Service.Components
             GC.WaitForPendingFinalizers();
             GC.Collect();
             GC.WaitForPendingFinalizers();
-            DeleteFolders();
+            string localDirPath = FileHelper.CombinePaths(FileHelper.LocalDir, _rootDirectoryName);
+            string runnerDirPath = FileHelper.CombinePaths(FileHelper.RunnerDir, _rootDirectoryName);
+            DeleteDir(localDirPath);
+            DeleteDir(runnerDirPath);
         }
 
-        private void DeleteFolders()
+        private void DeleteDir(string dirPath)
         {
-            string runnerDirectoryPath = FileHandler.GetRunnerDirectory(_rootDirectoryName);
-            FileHandler.DeleteDirectoryContent(runnerDirectoryPath, true);
-            FileHandler.DeleteDirectoryContent(_rootDirectoryPath, true);
+            try
+            {
+                FileHelper.DeleteDir(dirPath);
+            }
+            catch (Exception ex)
+            {
+                LogWriter.Log(LogLevel.Error, $"Nem sikerult kitorolni a(z) {dirPath} utvonalu mappat: {ex.Message}");
+            }
         }
     }
 }

@@ -1,11 +1,12 @@
-﻿{
+{
   "profiles": {
     "Service": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
+      "commandLineArgs": "C:\\Users\\reveszg\\Desktop\\Watched_Folder Asd* 1000",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
-      }
+      },
+      "dotnetRunMessages": true
     }
   }
 }

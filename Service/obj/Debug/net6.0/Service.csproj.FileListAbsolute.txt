@@ -90,4 +90,3 @@ C:\GitRepos\szakdoga\Service\obj\Debug\net6.0\Service.dll
 C:\GitRepos\szakdoga\Service\obj\Debug\net6.0\ref\Service.dll
 C:\GitRepos\szakdoga\Service\obj\Debug\net6.0\Service.pdb
 C:\GitRepos\szakdoga\Service\obj\Debug\net6.0\Service.genruntimeconfig.cache
-C:\GitRepos\szakdoga\Service\bin\Debug\net6.0\Local\AsdMukodo\Debug\net6.0\AsdMukodo.deps.json

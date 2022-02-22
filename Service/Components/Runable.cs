@@ -1,16 +1,18 @@
-﻿using System.Reflection;
+﻿using Service.Helpers;
+using Service.Interfaces;
+using System.Reflection;
 
 namespace Service.Components
 {
-    public class Runable
+    public class Runable : IRunable
     {
-        private object? _instance;
-        private MethodInfo? _runMethod;
-        private uint? _timer;
+        private object _instance;
+        private MethodInfo _runMethod;
+        private uint _timer;
         private ulong _startedAt;
-        public bool IsCurrentlyRunning { get; private set; }
+        private bool IsCurrentlyRunning { get; set; }
 
-        public bool CreateRunableInstance(Assembly assembly)
+        public bool CreateInstance(Assembly assembly)
         {
             //minden bele egy try-ba, mert mindig dobhat kivetelt
             try
@@ -18,8 +20,7 @@ namespace Service.Components
                 var runnableClass = assembly.ExportedTypes.Single();
                 if (runnableClass.GetInterface("Shared.IWorkerTask") == null)
                 {
-                    //TODO LOGOLNI
-                    Console.WriteLine($"A(z) {assembly.FullName} nevu assembly nem implementalja a Shared.IWorkerTask nevu interface-t.");
+                    LogWriter.Log(LogLevel.Error, $"A(z) {assembly.FullName} nevu assembly nem implementalja a Shared.IWorkerTask nevu interface-t.");
                     return false;
                 }
                 // itt mar be van toltve az appdomain-be, mert ez a Assembly dll parameter onnan van
@@ -28,22 +29,21 @@ namespace Service.Components
                 var runMethod = runnableClass.GetMethod("Run");
                 //ez biztos nem null mert mar volt egy check, hogy imlementalja az interface-t
                 var timerPropety = runnableClass.GetProperty("Timer")!;
-                var timer = (uint?)timerPropety.GetValue(instance);
+                var timer = timerPropety != null ? (uint?)timerPropety.GetValue(instance) : 0;
                 if (ErrorWithProperties(instance, runMethod, timer))
                 {
                     return false;
                 }
-                _instance = instance;
-                _runMethod = runMethod;
-                _timer = timer;
-                _startedAt = Scheduler.IterationCounter + 1;
+                _instance = instance!;
+                _runMethod = runMethod!;
+                _timer = timer!.Value;
+                _startedAt = App.IterationCounter + 1;
                 IsCurrentlyRunning = false;
                 return true;
             }
             catch (Exception ex)
             {
-                //TODO LOGOLNI
-                Console.WriteLine($"Valami nem stimmelt a(z) {assembly.FullName} nevu assembly peldanyositasakor");
+                LogWriter.Log(LogLevel.Error, $"Valami nem stimmelt a(z) {assembly.FullName} nevu assembly peldanyositasakor: {ex.Message}");
             }
             return false;
         }
@@ -51,7 +51,7 @@ namespace Service.Components
         private bool ErrorWithProperties(object? instance, MethodInfo? runMethod, uint? timer) =>
             instance == null || runMethod == null || timer == null || timer == 0;
 
-        private bool CanStartRun() => (Scheduler.IterationCounter - _startedAt) % _timer == 0;
+        private bool CanStartRun() => (App.IterationCounter - _startedAt) % _timer == 0;
 
         public async Task<bool> InvokeRun()
         {
@@ -65,14 +65,12 @@ namespace Service.Components
             {
                 IsCurrentlyRunning = true;
                 //ha nem sikerul a dereferalas akkor az azt jelentoi, hogy exception dobodott
-                await (Task)_runMethod!.Invoke(_instance, Array.Empty<object>())!;
+                await (Task)_runMethod.Invoke(_instance, Array.Empty<object>())!;
                 return true;
             }
-            catch (Exception e)
+            catch (Exception ex)
                 {
-                Console.WriteLine($"\tELKAPTAM!!!!");
-                Console.WriteLine($"\t{e.InnerException}");
-                //TODO logolni
+                LogWriter.Log(LogLevel.Error, $"A(z) {_instance.GetType()} hibat dobott futas kozben, de el lett kapva: {ex.Message}");
             }
             finally
             {
@@ -81,7 +79,7 @@ namespace Service.Components
             return false;
         }
 
-        public void RemoveReferences()
+        public void UnleashReferences()
         {
             IsCurrentlyRunning = false;
             //ez miatt kell nullable-nek lennie

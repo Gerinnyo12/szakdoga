@@ -1,6 +1,4 @@
-﻿using Service.Helpers;
-
-namespace Service.Components
+﻿namespace Service.Helpers
 {
     public class Arguments
     {
@@ -10,15 +8,15 @@ namespace Service.Components
         {
             if (args == null || args.Length != ARGS_NUM)
             {
-                throw new ArgumentNullException($"Az argumentumok száma nem {ARGS_NUM}");
+                throw new ArgumentException($"Az argumentumok száma nem {ARGS_NUM}");
             }
             if (!FileHelper.DirExists(args[0]))
             {
-                throw new ArgumentException($"Nem létezik a(z) {args[1]} mappa");
+                throw new ArgumentException($"Nem létezik a(z) {args[0]} mappa");
             }
             if (!int.TryParse(args[2], out int copyTime))
             {
-                throw new ArgumentException($"Nem lehet számmá konvertálni a 3. paramétert");
+                throw new ArgumentException($"Nem lehet számmá konvertálni a 3. {args[2]} paramétert");
             }
             return (args[0], args[1] + ".zip", copyTime);
         }

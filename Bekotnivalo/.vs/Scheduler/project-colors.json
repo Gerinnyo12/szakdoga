@@ -1,0 +1,16 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "7f2f2095-5356-4069-a5e6-b3a2f226c391": {
+      "ProjectGuid": "7f2f2095-5356-4069-a5e6-b3a2f226c391",
+      "DisplayName": "Service",
+      "ColorIndex": 0
+    },
+    "9f8312cf-0d03-4d97-bf0b-adf810d485f8": {
+      "ProjectGuid": "9f8312cf-0d03-4d97-bf0b-adf810d485f8",
+      "DisplayName": "Shared",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}

@@ -2,7 +2,7 @@
 {
     public interface IFileHandler
     {
-        bool CreateRunnerDir();
-        string? CopyDllToRunnerDir(string fileName);
+        bool CreateRunnerDir(string rootDirName);
+        string? CopyFileToRunnerDir(string rootDirName, string fileNameWithoutExtension);
     }
 }

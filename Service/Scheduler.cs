@@ -15,7 +15,7 @@ namespace Service
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _app.ExecuteDlls();
+                _app.RunDlls();
                 await Task.Delay(1000, stoppingToken);
             }
         }

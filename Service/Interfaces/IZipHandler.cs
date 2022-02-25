@@ -2,6 +2,6 @@
 {
     public interface IZipHandler
     {
-        Task<string?> ExtractZip();
+        Task<string?> ExtractZip(string zipPath, int maxCopyTimeInMiliSec);
     }
 }

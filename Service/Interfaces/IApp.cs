@@ -2,6 +2,7 @@
 {
     public interface IApp
     {
-        void ExecuteDlls();
+        IContextContainer ContextContainer { get; }
+        void RunDlls();
     }
 }

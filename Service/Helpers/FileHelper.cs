@@ -7,10 +7,10 @@ namespace Service.Helpers
         private const string LOCAL_DIR_NAME = "Local";
         private const string RUNNER_DIR_NAME = "Runner";
         private const string DLL_EXTENSION = ".dll";
-        public static string LocalDir { get; }
-        public static string RunnerDir { get; }
+        public static string LocalDir;
+        public static string RunnerDir;
 
-        static FileHelper()
+        public static void PrepareDirs()
         {
             LocalDir = CreateAndGetDirPath(LOCAL_DIR_NAME);
             RunnerDir = CreateAndGetDirPath(RUNNER_DIR_NAME);
@@ -20,7 +20,6 @@ namespace Service.Helpers
         {
             string workingDir = GetWorkingDir();
             string path = CombinePaths(workingDir, dirName);
-            //TODO EZ A 2 NINCS ELKAPVA HA HIBAT DOBNA
             DeleteDir(path);
             CreateDir(path);
             return path;

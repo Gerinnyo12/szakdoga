@@ -3,7 +3,9 @@
     public interface IAssemblyContext
     {
         IRunable RunableInstance { get; }
-        bool LoadAssemblies();
-        void UnloadContext();
+        IFileHandler FileHandler { get; }
+        Task InvokeRun();
+        bool Load(string rootDirPath);
+        Task UnloadContext();
     }
 }

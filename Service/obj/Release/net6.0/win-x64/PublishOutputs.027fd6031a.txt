@@ -1,0 +1,7 @@
+C:\GitRepos\szakdoga\Service\bin\Release\net6.0\win-x64\publish\win-x64\nlog.config
+C:\GitRepos\szakdoga\Service\bin\Release\net6.0\win-x64\publish\win-x64\appsettings.Development.json
+C:\GitRepos\szakdoga\Service\bin\Release\net6.0\win-x64\publish\win-x64\appsettings.json
+C:\GitRepos\szakdoga\Service\bin\Release\net6.0\win-x64\publish\win-x64\Local\AsdMukodo\Debug\net6.0\AsdMukodo.deps.json
+C:\GitRepos\szakdoga\Service\bin\Release\net6.0\win-x64\publish\win-x64\Service.pdb
+C:\GitRepos\szakdoga\Service\bin\Release\net6.0\win-x64\publish\win-x64\aspnetcorev2_inprocess.dll
+C:\GitRepos\szakdoga\Service\bin\Release\net6.0\win-x64\publish\win-x64\Service.exe

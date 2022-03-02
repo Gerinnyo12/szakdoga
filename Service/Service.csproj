@@ -1,16 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>dotnet-Service-6332DA9A-3D40-4627-BFE7-CAF51FB99D69</UserSecretsId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>dotnet-Service-6332DA9A-3D40-4627-BFE7-CAF51FB99D69</UserSecretsId>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.0" />
-    <PackageReference Include="NLog" Version="5.0.0-rc2" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="5.0.0-rc2" />
-  </ItemGroup>
+		<OutputType>exe</OutputType>
+		<PublishSingleFile>false</PublishSingleFile>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+		<PlatformTarget>x64</PlatformTarget>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.0" />
+		<PackageReference Include="NLog" Version="5.0.0-rc2" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="5.0.0-rc2" />
+	</ItemGroup>
 </Project>

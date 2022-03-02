@@ -5,14 +5,14 @@ namespace Service.Implementations
     public class ContextContainer : IContextContainer
     {
         public Dictionary<string, IAssemblyContext> Contexts { get; private set; }
-        public IZipHandler ZipHandler { get; private set; }
+        public IZipExtracter ZipExtracter { get; private set; }
         private readonly ILogger<ContextContainer> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public ContextContainer(IZipHandler zipHandler, IServiceScopeFactory serviceScopeFactory, ILogger<ContextContainer> logger)
+        public ContextContainer(IZipExtracter zipExtracter, IServiceScopeFactory serviceScopeFactory, ILogger<ContextContainer> logger)
         {
             Contexts = new Dictionary<string, IAssemblyContext>();
-            ZipHandler = zipHandler;
+            ZipExtracter = zipExtracter;
             _serviceScopeFactory = serviceScopeFactory;
             _logger = logger;
         }
@@ -26,7 +26,7 @@ namespace Service.Implementations
                 return false;
             }
 
-            string? rootDirPath = await ZipHandler.ExtractZip(zipPath, maxCopyTimeInMiliSec);
+            string? rootDirPath = await ZipExtracter.ExtractZip(zipPath, maxCopyTimeInMiliSec);
             if (rootDirPath is null)
             {
                 _logger.LogError($"Nem sikerult a {zipPath} kicsomagolasa");

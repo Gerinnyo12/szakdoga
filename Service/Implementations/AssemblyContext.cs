@@ -8,21 +8,19 @@ namespace Service.Implementations
     public class AssemblyContext : IAssemblyContext
     {
         public IRunable RunableInstance { get; private set; }
-        public IFileHandler FileHandler { get; private set; }
+        public IDllLifter DllLifter { get; private set; }
         private readonly AssemblyLoadContext _assemblyLoadContext;
-        private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly ILogger<AssemblyContext> _logger;
-        private readonly Assembly[] DEFAULT_ASSEMBLIES;
+        private readonly ReferenceHelper _referenceHelper;
         private string? _rootDirPath;
 
-        public AssemblyContext(IRunable runableinstance, IFileHandler fileHandler, IServiceScopeFactory serviceScopeFactory, ILogger<AssemblyContext> logger, Assembly[] defaultAssemblies)
+        public AssemblyContext(IRunable runableInstance, IDllLifter dllLifter, ReferenceHelper referenceHelper, ILogger<AssemblyContext> logger)
         {
             _assemblyLoadContext = new AssemblyLoadContext(String.Empty, isCollectible: true);
-            RunableInstance = runableinstance;
-            FileHandler = fileHandler;
-            _serviceScopeFactory = serviceScopeFactory;
+            RunableInstance = runableInstance;
+            DllLifter = dllLifter;
+            _referenceHelper = referenceHelper;
             _logger = logger;
-            DEFAULT_ASSEMBLIES = defaultAssemblies;
         }
 
         public bool Load(string rootDirPath)
@@ -51,14 +49,14 @@ namespace Service.Implementations
         private Assembly? HandleAssemblies()
         {
             string rootDirName = FileHelper.GetFileName(_rootDirPath, withoutExtension: true);
-            bool isDirCreated = FileHandler.CreateRunnerDir(rootDirName);
+            bool isDirCreated = DllLifter.CreateRunnerDir(rootDirName);
             if (!isDirCreated)
             {
                 return null;
             }
 
             string fileName = rootDirName;
-            string? filePath = FileHandler?.CopyFileToRunnerDir(rootDirName, fileName);
+            string? filePath = DllLifter?.CopyFileToRunnerDir(rootDirName, fileName);
             if (filePath is null)
             {
                 return null;
@@ -87,7 +85,7 @@ namespace Service.Implementations
                     continue;
                 }
 
-                string? referencedAssemblyPath = FileHandler?.CopyFileToRunnerDir(rootDirName, referencedAssembly.Name);
+                string? referencedAssemblyPath = DllLifter?.CopyFileToRunnerDir(rootDirName, referencedAssembly.Name);
                 if (referencedAssemblyPath is null)
                 {
                     //nem pontosan 1 ilyen nevu assembly volt a mappaban
@@ -118,7 +116,7 @@ namespace Service.Implementations
 
         private bool CanSkipAssembly(AssemblyName assemblyName)
         {
-            if (DEFAULT_ASSEMBLIES.Any(assembly => assembly.FullName == assemblyName.FullName))
+            if (_referenceHelper.IsAssemblyAlreadyLoaded(assemblyName))
             {
                 _logger.LogInformation($"A(z) {assemblyName.FullName} nevu assembly egy alap dependency, ezert nem kell betolteni");
                 return true;

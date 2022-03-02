@@ -7,8 +7,8 @@ namespace Service.Helpers
         private const string LOCAL_DIR_NAME = "Local";
         private const string RUNNER_DIR_NAME = "Runner";
         private const string DLL_EXTENSION = ".dll";
-        public static string LocalDir;
-        public static string RunnerDir;
+        public static string LocalDir { get; private set; }
+        public static string RunnerDir { get; private set; }
 
         public static void PrepareDirs()
         {
@@ -20,7 +20,7 @@ namespace Service.Helpers
         {
             string workingDir = GetWorkingDir();
             string path = CombinePaths(workingDir, dirName);
-            DeleteDir(path);
+            try { DeleteDir(path); } catch { }
             CreateDir(path);
             return path;
         }

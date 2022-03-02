@@ -2,7 +2,6 @@
   "profiles": {
     "Service": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\Users\\reveszg\\Desktop\\Watched_Folder Asd* 1000",
       "environmentVariables": {
         "DOTNET_ENVIRONMENT": "Development"
       },

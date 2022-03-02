@@ -6,6 +6,7 @@ using Service.Implementations;
 using Service.Interfaces;
 
 var logger = LogManager.Setup().RegisterNLogWeb().GetCurrentClassLogger();
+
 try
 {
     IHost host = Host.CreateDefaultBuilder(args)
@@ -13,17 +14,17 @@ try
         {
             options.ServiceName = "Scheduler";
         })
-        .ConfigureServices(services =>
+        .ConfigureServices((context, services) =>
         {
-            services.AddHostedService<Scheduler>();
-            services.AddSingleton(args);
-            services.AddSingleton(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddTransient<IApp, App>();
+            services.AddHostedService<Motor>();
+            services.AddSingleton(new ReferenceHelper());
+            services.AddTransient<IHandler, Handler>();
             services.AddTransient<IContextContainer, ContextContainer>();
             services.AddTransient<IAssemblyContext, AssemblyContext>();
-            services.AddTransient<IZipHandler, ZipHandler>();
-            services.AddTransient<IRunable, Runable>();
-            services.AddTransient<IFileHandler, FileHandler>();
+            services.AddTransient<IZipExtracter, ZipExtracter>();
+            services.AddScoped<IRunable, Runable>();
+            services.AddScoped<IDllLifter, DllLifter>();
+            services.Configure<Params>(context.Configuration.GetSection(Params.ParameterString));
         })
         .ConfigureLogging(logging =>
         {

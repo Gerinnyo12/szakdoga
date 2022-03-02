@@ -30,7 +30,12 @@
       "ProjectGuid": "0d10df66-fdb4-4419-a124-cc94c238b427",
       "DisplayName": "Shared",
       "ColorIndex": 4
+    },
+    "344f2893-28f5-4bd0-8a74-ada7eb975572": {
+      "ProjectGuid": "344f2893-28f5-4bd0-8a74-ada7eb975572",
+      "DisplayName": "UI",
+      "ColorIndex": 5
     }
   },
-  "NextColorIndex": 5
+  "NextColorIndex": 6
 }

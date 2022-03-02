@@ -3,7 +3,7 @@
     public interface IContextContainer
     {
         Dictionary<string, IAssemblyContext> Contexts { get; }
-        IZipHandler ZipHandler { get; }
+        IZipExtracter ZipExtracter { get; }
         Task<bool> LoadAssemblyWithReferences(string zipPath, int maxCopyTimeInMiliSec);
         Task ExecuteContainer();
         Task<bool> FindAndRemoveAssembly(string zipPath);

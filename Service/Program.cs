@@ -4,8 +4,24 @@ using Service;
 using Service.Helpers;
 using Service.Implementations;
 using Service.Interfaces;
+using Shared.Models;
+using Shared.Models.Parameters;
+using System.Text.Json;
 
 var logger = LogManager.Setup().RegisterNLogWeb().GetCurrentClassLogger();
+
+//var settings = new AppSettingsModel()
+//{
+//    Parameters = new()
+//    {
+//        Path = Path,
+//        Pattern = Pattern,
+//        MaxCopyTimeInMiliSec = MaxCopyTimeInMiliSec,
+//    }
+//};
+var json = JsonSerializer.Serialize(new AppSettingsModel());
+var parameters = JsonSerializer.Deserialize<AppSettingsModel>(json).Parameters;
+
 
 try
 {
@@ -24,7 +40,7 @@ try
             services.AddTransient<IZipExtracter, ZipExtracter>();
             services.AddScoped<IRunable, Runable>();
             services.AddScoped<IDllLifter, DllLifter>();
-            services.Configure<Params>(context.Configuration.GetSection(Params.ParameterString));
+            services.Configure<ParametersModel>(context.Configuration.GetSection(ParametersModel.ParameterString));
         })
         .ConfigureLogging(logging =>
         {

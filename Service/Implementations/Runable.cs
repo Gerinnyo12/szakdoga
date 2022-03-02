@@ -5,6 +5,7 @@ namespace Service.Implementations
 {
     public class Runable : IRunable
     {
+        private const string IWORKERTASK = "Shared.Interfaces.IWorkerTask";
         private readonly ILogger<Runable> _logger;
         private object? _instance;
         private MethodInfo? _runMethod;
@@ -57,7 +58,7 @@ namespace Service.Implementations
 
         private bool InitVariables(Assembly assembly, Type exportedClass)
         {
-            if (exportedClass.GetInterface("Shared.IWorkerTask") is null)
+            if (exportedClass.GetInterface(IWORKERTASK) is null)
             {
                 _logger.LogError($"A(z) {exportedClass.FullName} osztaly nem implementalja a Shared.IWorkerTask nevu interface-t.");
                 return false;

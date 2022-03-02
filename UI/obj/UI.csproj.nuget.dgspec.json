@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\GitRepos\\szakdoga\\UI\\UI.csproj": {}
+    "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\UI\\UI.csproj": {}
   },
   "projects": {
-    "C:\\GitRepos\\szakdoga\\Shared\\Shared.csproj": {
+    "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Shared\\Shared.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\GitRepos\\szakdoga\\Shared\\Shared.csproj",
+        "projectUniqueName": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Shared\\Shared.csproj",
         "projectName": "Shared",
-        "projectPath": "C:\\GitRepos\\szakdoga\\Shared\\Shared.csproj",
-        "packagesPath": "C:\\Users\\reveszg\\.nuget\\packages\\",
-        "outputPath": "C:\\GitRepos\\szakdoga\\Shared\\obj\\",
+        "projectPath": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Shared\\Shared.csproj",
+        "packagesPath": "C:\\Users\\Gerinnyo12\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Shared\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\reveszg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Gerinnyo12\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -60,21 +64,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\GitRepos\\szakdoga\\UI\\UI.csproj": {
+    "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\UI\\UI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\GitRepos\\szakdoga\\UI\\UI.csproj",
+        "projectUniqueName": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\UI\\UI.csproj",
         "projectName": "UI",
-        "projectPath": "C:\\GitRepos\\szakdoga\\UI\\UI.csproj",
-        "packagesPath": "C:\\Users\\reveszg\\.nuget\\packages\\",
-        "outputPath": "C:\\GitRepos\\szakdoga\\UI\\obj\\",
+        "projectPath": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\UI\\UI.csproj",
+        "packagesPath": "C:\\Users\\Gerinnyo12\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\UI\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\reveszg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Gerinnyo12\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -88,8 +96,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\GitRepos\\szakdoga\\Shared\\Shared.csproj": {
-                "projectPath": "C:\\GitRepos\\szakdoga\\Shared\\Shared.csproj"
+              "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Shared\\Shared.csproj": {
+                "projectPath": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Shared\\Shared.csproj"
               }
             }
           }
@@ -103,6 +111,12 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
+          "dependencies": {
+            "System.ServiceProcess.ServiceController": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -121,7 +135,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -557,6 +557,19 @@
         "build": {
           "buildTransitive/netcoreapp3.1/_._": {}
         }
+      },
+      "Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "Microsoft.Extensions.Logging": "6.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Shared.dll": {}
+        }
       }
     },
     "net6.0/win-x64": {
@@ -1093,6 +1106,19 @@
         },
         "build": {
           "buildTransitive/netcoreapp3.1/_._": {}
+        }
+      },
+      "Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "Microsoft.Extensions.Logging": "6.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Shared.dll": {}
         }
       }
     }
@@ -1948,6 +1974,11 @@
         "system.text.json.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "Shared/1.0.0": {
+      "type": "project",
+      "path": "../Shared/Shared.csproj",
+      "msbuildProject": "../Shared/Shared.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -1955,23 +1986,29 @@
       "Microsoft.Extensions.Hosting >= 6.0.1",
       "Microsoft.Extensions.Hosting.WindowsServices >= 6.0.0",
       "NLog >= 5.0.0-rc2",
-      "NLog.Web.AspNetCore >= 5.0.0-rc2"
+      "NLog.Web.AspNetCore >= 5.0.0-rc2",
+      "Shared >= 1.0.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\reveszg\\.nuget\\packages\\": {}
+    "C:\\Users\\Gerinnyo12\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\GitRepos\\szakdoga\\Service\\Service.csproj",
+      "projectUniqueName": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Service\\Service.csproj",
       "projectName": "Service",
-      "projectPath": "C:\\GitRepos\\szakdoga\\Service\\Service.csproj",
-      "packagesPath": "C:\\Users\\reveszg\\.nuget\\packages\\",
-      "outputPath": "C:\\GitRepos\\szakdoga\\Service\\obj\\",
+      "projectPath": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Service\\Service.csproj",
+      "packagesPath": "C:\\Users\\Gerinnyo12\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Service\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\reveszg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Gerinnyo12\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -1984,7 +2021,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Shared\\Shared.csproj": {
+              "projectPath": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Shared\\Shared.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -2027,15 +2068,15 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
-            "version": "[6.0.2, 6.0.2]"
+            "version": "[6.0.0, 6.0.0]"
           },
           {
             "name": "Microsoft.NETCore.App.Runtime.win-x64",
-            "version": "[6.0.2, 6.0.2]"
+            "version": "[6.0.0, 6.0.0]"
           },
           {
             "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
-            "version": "[6.0.2, 6.0.2]"
+            "version": "[6.0.0, 6.0.0]"
           }
         ],
         "frameworkReferences": {
@@ -2043,7 +2084,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
       }
     },
     "runtimes": {

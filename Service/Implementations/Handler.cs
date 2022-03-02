@@ -1,21 +1,22 @@
 ﻿using Microsoft.Extensions.Options;
 using Service.Helpers;
 using Service.Interfaces;
+using Shared.Models.Parameters;
 
 namespace Service.Implementations
 {
     public class Handler : IHandler
     {
         private readonly FileSystemWatcher _fileSystemWatcher;
-        private readonly Params _params;
+        private readonly ParametersModel _parameters;
         public IContextContainer ContextContainer { get; }
         public static ulong IterationCounter { get; private set; } = 0;
 
-        public Handler(IContextContainer contextContainer, IOptions<Params> parameters)
+        public Handler(IContextContainer contextContainer, IOptions<ParametersModel> parameters)
         {
             ContextContainer = contextContainer;
-            _params = parameters.Value;
-            _fileSystemWatcher = new FileSystemWatcher(_params.Path, _params.Pattern)
+            _parameters = parameters.Value;
+            _fileSystemWatcher = new FileSystemWatcher(_parameters.Path, _parameters.Pattern)
             {
                 EnableRaisingEvents = true,
                 NotifyFilter = NotifyFilters.FileName,
@@ -33,7 +34,7 @@ namespace Service.Implementations
 
         private void AddExisting()
         {
-            foreach (var zipPath in Directory.GetFiles(_params.Path, _params.Pattern, SearchOption.TopDirectoryOnly))
+            foreach (var zipPath in Directory.GetFiles(_parameters.Path, _parameters.Pattern, SearchOption.TopDirectoryOnly))
             {
                 OnFileAdd(zipPath);
             }
@@ -41,7 +42,7 @@ namespace Service.Implementations
 
         private async void OnFileAdd(string zipPath)
         {
-            await ContextContainer.LoadAssemblyWithReferences(zipPath, _params.MaxCopyTimeInMiliSec);
+            await ContextContainer.LoadAssemblyWithReferences(zipPath, _parameters.MaxCopyTimeInMiliSec);
         }
 
         private async void OnFileDelete(string zipPath)

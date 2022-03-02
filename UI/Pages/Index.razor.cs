@@ -1,42 +1,70 @@
-﻿using Shared.Models;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
+using Shared.Models;
+using System.ServiceProcess;
 using System.Text.Json;
+using UI.Helpers;
 
 namespace UI.Pages
 {
     public partial class Index
     {
-        private string Path { get; set; }
-        private string Pattern { get; set; }
-        private string MaxCopyTimeInMiliSec { get; set; }
-        private readonly ServiceController serviceController = new();
+        private const string APP_SETTINGS_JSON = "appsettings.json";
+        private const string SERVICE_NAME = "Scheduler";
+        private const double MAX_SECONDS_UNTIL_SERVICE_STARTS = 30;
 
-        public async Task OnStart()
+        [Inject]
+        public IJSRuntime JSRuntime { get; set; }
+        private AppSettingsModel Model { get; set; } = new();
+        private ServiceController? _serviceController;
+        private readonly string _workingDir = Directory.GetCurrentDirectory();
+
+        protected override async Task OnInitializedAsync()
         {
-            if (!ParamsValid())
+            await base.OnInitializedAsync();
+            try
             {
-                return;
+                _serviceController = new(SERVICE_NAME);
             }
-            await StartService();
+            catch (Exception ex)
+            {
+                await JSRuntime.ErrorSwal("Hiba", $"Nincsen {SERVICE_NAME} nevű szervíz a gépen!");
+            }
         }
 
-        private bool ParamsValid()
+        private async Task OnStart()
         {
-            return true;
+            if (_serviceController is null)
+            {
+                await JSRuntime.ErrorSwal("Hiba", $"Nincsen {SERVICE_NAME} nevű szervíz a gépen!");
+                return;
+            }
+            //TODO LOADING SPINNER
+            var json = JsonSerializer.Serialize(Model);
+            string appSettingsPath = Path.Combine(_workingDir, APP_SETTINGS_JSON);
+            File.WriteAllText(appSettingsPath, json);
+            await StartService();
+            //var parameters = JsonSerializer.Deserialize<AppSettingsJson>(json).Parameters;
         }
 
         private async Task StartService()
         {
-            var settings = new AppSettingsJson()
+            if (_serviceController.Status == ServiceControllerStatus.StartPending || _serviceController.Status == ServiceControllerStatus.Running)
             {
-                Parameters = new()
-                {
-                    Path = Path,
-                    Pattern = Pattern,
-                    MaxCopyTimeInMiliSec = MaxCopyTimeInMiliSec,
-                }
-            };
-            var json = JsonSerializer.Serialize<AppSettingsJson>(new AppSettingsJson());
-            var parameters = JsonSerializer.Deserialize<AppSettingsJson>(json).Parameters;
+                await JSRuntime.ErrorAlert("Hiba", "A szervíz már fut!");
+                return;
+            }
+            _serviceController.Start();
+            await Task.Run(() =>
+            {
+                _serviceController.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(MAX_SECONDS_UNTIL_SERVICE_STARTS));
+            });
+            await JSRuntime.SuccessAlert("Siker", "A szervíz sikeresen elindult!");
+        }
+
+        private async Task OnStop()
+        {
+
         }
 
     }

@@ -1,14 +1,6 @@
-﻿namespace Shared.Models
+﻿namespace Shared.Models.Logging
 {
-    public class Logging
-    {
-        public EventLog EventLog { get; set; } = new();
-    }
-    public class EventLog
-    {
-        public LogLevel LogLevel { get; set; } =  new();
-    }
-    public class LogLevel
+    public class LogLevelModel
     {
         private Microsoft.Extensions.Logging.LogLevel _loglevel { get; set; } = Microsoft.Extensions.Logging.LogLevel.Information;
         public string Default

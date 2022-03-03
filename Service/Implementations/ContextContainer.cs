@@ -22,14 +22,14 @@ namespace Service.Implementations
             // a file az nyilvan letezik mert azert hivodott meg a callback
             if (string.IsNullOrEmpty(zipPath))
             {
-                _logger.LogError($"A(z) {nameof(zipPath)} parameter nem lehet null vagy ures.");
+                _logger.LogError("A(z) {nameof(zipPath)} parameter nem lehet null vagy ures.", nameof(zipPath));
                 return false;
             }
 
             string? rootDirPath = await ZipExtracter.ExtractZip(zipPath, maxCopyTimeInMiliSec);
             if (rootDirPath is null)
             {
-                _logger.LogError($"Nem sikerult a {zipPath} kicsomagolasa");
+                _logger.LogError("Nem sikerult a {zipPath} kicsomagolasa", zipPath);
                 return false;
             }
 
@@ -44,7 +44,7 @@ namespace Service.Implementations
             }
 
             Contexts.Add(zipPath, context);
-            _logger.LogInformation($"{zipPath} sikeresen be lett toltve!");
+            _logger.LogInformation("{zipPath} sikeresen be lett toltve!", zipPath);
             return true;
         }
 

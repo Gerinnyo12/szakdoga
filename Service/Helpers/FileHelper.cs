@@ -1,31 +1,13 @@
-﻿using System.IO.Compression;
+﻿using Shared;
+using System.IO.Compression;
 
 namespace Service.Helpers
 {
     public class FileHelper
     {
-        private const string LOCAL_DIR_NAME = "Local";
-        private const string RUNNER_DIR_NAME = "Runner";
-        private const string DLL_EXTENSION = ".dll";
-        public static string LocalDir { get; private set; }
-        public static string RunnerDir { get; private set; }
-
-        public static void PrepareDirs()
-        {
-            LocalDir = CreateAndGetDirPath(LOCAL_DIR_NAME);
-            RunnerDir = CreateAndGetDirPath(RUNNER_DIR_NAME);
-        }
-
-        private static string CreateAndGetDirPath(string dirName)
-        {
-            string workingDir = GetWorkingDir();
-            string path = CombinePaths(workingDir, dirName);
-            try { DeleteDir(path); } catch { }
-            CreateDir(path);
-            return path;
-        }
-
-        public static string GetWorkingDir() => Directory.GetCurrentDirectory();
+        private static string DLL_EXTENSION = Constants.DLL_EXTENSION;
+        public static string LocalDir { get; } = Constants.LOCAL_DIR_PATH;
+        public static string RunnerDir { get; } = Constants.RUNNER_DIR_PATH;
 
         public static bool DirExists(string path) => Directory.Exists(path);
 

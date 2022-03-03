@@ -1,5 +1,6 @@
 ﻿using Service.Helpers;
 using Service.Interfaces;
+using Shared;
 using System.Reflection;
 using System.Runtime.Loader;
 
@@ -116,7 +117,9 @@ namespace Service.Implementations
 
         private bool CanSkipAssembly(AssemblyName assemblyName)
         {
-            if (_referenceHelper.IsAssemblyAlreadyLoaded(assemblyName))
+            //a Shared.dll azert kivetel mert frissulhet ugy, hogy egy dll meg az elozo verziot hasznalja
+            //ilyenkor a regi toltodjon be ne az uj
+            if (_referenceHelper.IsAssemblyAlreadyLoaded(assemblyName) && assemblyName.Name != Constants.SHARED_PROJECT_NAME)
             {
                 _logger.LogInformation($"A(z) {assemblyName.FullName} nevu assembly egy alap dependency, ezert nem kell betolteni");
                 return true;

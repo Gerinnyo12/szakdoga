@@ -1,70 +1,87 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using Shared;
 using Shared.Models;
 using System.ServiceProcess;
-using System.Text.Json;
 using UI.Helpers;
 
 namespace UI.Pages
 {
+    public enum ServiceState
+    {
+        Loading,
+        Running,
+        Stopped,
+        Unavailable,
+    }
+
     public partial class Index
     {
-        private const string APP_SETTINGS_JSON = "appsettings.json";
-        private const string SERVICE_NAME = "Scheduler";
-        private const double MAX_SECONDS_UNTIL_SERVICE_STARTS = 30;
-
         [Inject]
-        public IJSRuntime JSRuntime { get; set; }
+        private IJSRuntime JSRuntime { get; set; }
         private AppSettingsModel Model { get; set; } = new();
+        private string _appSettingsPath;
+        private string _serviceName;
+        private double _maxSecondsUntilServiceStarts;
+        private ServiceState _state = ServiceState.Stopped;
         private ServiceController? _serviceController;
-        private readonly string _workingDir = Directory.GetCurrentDirectory();
 
-        protected override async Task OnInitializedAsync()
+        protected override void OnInitialized()
         {
-            await base.OnInitializedAsync();
+            base.OnInitialized();
             try
             {
-                _serviceController = new(SERVICE_NAME);
+                _appSettingsPath = Constants.APP_SETTINGS_JSON_PATH;
+                _serviceName = Constants.SERVICE_NAME;
+                _maxSecondsUntilServiceStarts = Constants.MAX_SECONDS_UNTIL_SERVICE_STARTS;
             }
             catch (Exception ex)
             {
-                await JSRuntime.ErrorSwal("Hiba", $"Nincsen {SERVICE_NAME} nevű szervíz a gépen!");
+                _state = ServiceState.Unavailable;
+                return;
+            }
+            //itt a kontroller mar nem lehet null mert le van kezelve ha nem letezne a szerviz
+            _serviceController = new(_serviceName);
+            if (_serviceController.Status == ServiceControllerStatus.Running || _serviceController.Status == ServiceControllerStatus.StartPending)
+            {
+                _state = ServiceState.Running;
             }
         }
 
         private async Task OnStart()
         {
-            if (_serviceController is null)
-            {
-                await JSRuntime.ErrorSwal("Hiba", $"Nincsen {SERVICE_NAME} nevű szervíz a gépen!");
-                return;
-            }
-            //TODO LOADING SPINNER
-            var json = JsonSerializer.Serialize(Model);
-            string appSettingsPath = Path.Combine(_workingDir, APP_SETTINGS_JSON);
-            File.WriteAllText(appSettingsPath, json);
+            var json = JsonConverter.Serialize(Model);
+            File.WriteAllText(_appSettingsPath, json);
             await StartService();
-            //var parameters = JsonSerializer.Deserialize<AppSettingsJson>(json).Parameters;
         }
 
         private async Task StartService()
         {
-            if (_serviceController.Status == ServiceControllerStatus.StartPending || _serviceController.Status == ServiceControllerStatus.Running)
-            {
-                await JSRuntime.ErrorAlert("Hiba", "A szervíz már fut!");
-                return;
-            }
-            _serviceController.Start();
+            _serviceController?.Start();
+            _state = ServiceState.Loading;
             await Task.Run(() =>
             {
-                _serviceController.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(MAX_SECONDS_UNTIL_SERVICE_STARTS));
+                _serviceController?.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(_maxSecondsUntilServiceStarts));
             });
+            _state = ServiceState.Running;
             await JSRuntime.SuccessAlert("Siker", "A szervíz sikeresen elindult!");
         }
 
         private async Task OnStop()
         {
+            _serviceController?.Stop();
+            _state = ServiceState.Loading;
+            await Task.Run(() =>
+            {
+                _serviceController?.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(_maxSecondsUntilServiceStarts));
+            });
+            _state = ServiceState.Stopped;
+            await JSRuntime.SuccessAlert("Siker", "A szervíz sikeresen leállítva!");
+        }
 
+        private async Task OnRefresh()
+        {
+            //TODO
         }
 
     }

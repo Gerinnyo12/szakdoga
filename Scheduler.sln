@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{0D10DF66-FDB4-4419-A124-CC94C238B427}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "UI\UI.csproj", "{344F2893-28F5-4BD0-8A74-ADA7EB975572}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "UI\UI.csproj", "{344F2893-28F5-4BD0-8A74-ADA7EB975572}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

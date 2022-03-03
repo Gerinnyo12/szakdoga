@@ -1,8 +1,53 @@
 ﻿@page "/"
+@using UI.Components
 
 <PageTitle>Scheduler</PageTitle>
 
-<p>
-    Helo World
-    <button @onclick=OnStart>Press me!</button>
-</p>
+<div class=".container">
+    @if (_state != ServiceState.Unavailable)
+    {
+        if (_state != ServiceState.Loading)
+        {
+            <div class="mb-2">
+                <div class="d-inline">
+                    <button @onclick="OnRefresh" class="btn btn-info" disabled="@(_state == ServiceState.Stopped)">Frissítés</button>
+                </div>
+                <div class="d-inline">
+                    <button @onclick="OnStop" class="btn btn-danger" disabled="@(_state == ServiceState.Stopped)">Leállítás</button>
+                </div>
+            </div>
+            <EditForm Model="@Model.Parameters" OnValidSubmit="@OnStart">
+                <DataAnnotationsValidator />
+                <div class="form-group mb-3">
+                    <ValidationMessage For="(() => Model.Parameters.Path)"></ValidationMessage>
+                    <label for="path">Abszolút útvonal</label>
+                    <InputText id="path" @bind-Value="Model.Parameters.Path" class="form-control" aria-describedby="pathHelp" placeholder="C:\Work\WindowsService\Scheduler" />
+                    <small id="pathHelp" class="form-text text-muted">Ez a mappa lesz figyelve a Windows Service által.</small>
+                </div>
+                <div class="form-group mb-3">
+                    <ValidationMessage For="(() => Model.Parameters.Pattern)"></ValidationMessage>
+                    <label for="pattern">Minta</label>
+                    <InputText id="pattern" @bind-Value="Model.Parameters.Pattern" class="form-control" aria-describedby="patternHelp" placeholder="Griff*" />
+                    <small id="patternHelp" class="form-text text-muted">Erre a mintára illeszkedő file-okat fogja figyelni a monitorozott mappa.</small>
+                </div>
+                <div class="form-group mb-3">
+                    <ValidationMessage For="(() => Model.Parameters.MaxCopyTimeInMiliSec)"></ValidationMessage>
+                    <label for="waitTime">Várakozási idő</label>
+                    <InputNumber id="waitTime" @bind-Value="Model.Parameters.MaxCopyTimeInMiliSec" class="form-control" aria-describedby="waitTimeHelp" placeholder="1000" />
+                    <small id="waitTimeHelp" class="form-text text-muted">TODO.</small>
+                </div>
+                <div class="d-inline">
+                    <button type="submit" class="btn btn-success" disabled="@(_state == ServiceState.Running)">Indítás</button>
+                </div>
+            </EditForm>
+        }
+        else
+        {
+            <Spinner></Spinner>
+        }
+    }
+    else
+    {
+        <p>Hiba! Nincsen ilyen szervíz a gépen!</p>
+    }
+</div>

@@ -1,11 +1,12 @@
 ﻿using Service.Interfaces;
+using Shared;
+using Shared.Interfaces;
 using System.Reflection;
 
 namespace Service.Implementations
 {
     public class Runable : IRunable
     {
-        private const string IWORKERTASK = "Shared.Interfaces.IWorkerTask";
         private readonly ILogger<Runable> _logger;
         private object? _instance;
         private MethodInfo? _runMethod;
@@ -58,7 +59,7 @@ namespace Service.Implementations
 
         private bool InitVariables(Assembly assembly, Type exportedClass)
         {
-            if (exportedClass.GetInterface(IWORKERTASK) is null)
+            if (exportedClass.GetInterface(Constants.I_WORKER_TASK) is null)
             {
                 _logger.LogError($"A(z) {exportedClass.FullName} osztaly nem implementalja a Shared.IWorkerTask nevu interface-t.");
                 return false;
@@ -83,7 +84,7 @@ namespace Service.Implementations
         }
 
         private bool CheckIfPropertyIsNull(object? instance, MethodInfo? runMethod, uint? timer) =>
-            instance == null || runMethod == null || timer == null || timer == 0;
+            instance is null || runMethod is null || timer is null || timer == 0;
 
         public async Task Run()
         {

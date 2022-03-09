@@ -7,9 +7,15 @@ using Service.Interfaces;
 using Shared;
 using Shared.Models.Parameters;
 
+if (!Constants.IS_WINDOWS)
+{
+    throw new InvalidOperationException("Nem támogatott operációs rendszer");
+}
+
 var logger = LogManager.Setup().RegisterNLogWeb().GetCurrentClassLogger();
 try
 {
+
     IHost host = Host.CreateDefaultBuilder(args)
         .UseWindowsService(options =>
         {
@@ -21,6 +27,7 @@ try
             services.AddSingleton(new ReferenceHelper());
             services.AddTransient<IHandler, Handler>();
             services.AddTransient<IContextContainer, ContextContainer>();
+            services.AddTransient<IListener, Listener>();
             services.AddTransient<IAssemblyContext, AssemblyContext>();
             services.AddTransient<IZipExtracter, ZipExtracter>();
             services.AddScoped<IRunable, Runable>();
@@ -39,8 +46,7 @@ try
 }
 catch (Exception ex)
 {
-    logger.Error(ex, "Stopped program because of exception");
-    throw;
+    logger.Error(ex, "A szervíz megállt hiba miatt!");
 }
 finally
 {

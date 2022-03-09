@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "AX856kXjHy7p88ihzpZ8ASTQ4lJkOJfD9tLDbmYG6cLtsd4tCEIPRxHfO9oWmd3jcB4qrFsIfnyd8SIsD0Fb/A==",
+  "dgSpecHash": "w+m58vZP4oooeZR3StXeasMLEZG59YsIa5H8HsXl9iYE7T+RVLi4V+tei1GECIR8J7Hz5+q3tmeW2OGCdgqq+Q==",
   "success": true,
   "projectFilePath": "C:\\GitRepos\\szakdoga\\Shared\\Shared.csproj",
   "expectedPackageFiles": [
@@ -13,10 +13,7 @@
     "C:\\Users\\reveszg\\.nuget\\packages\\system.codedom\\6.0.0\\system.codedom.6.0.0.nupkg.sha512",
     "C:\\Users\\reveszg\\.nuget\\packages\\system.diagnostics.diagnosticsource\\6.0.0\\system.diagnostics.diagnosticsource.6.0.0.nupkg.sha512",
     "C:\\Users\\reveszg\\.nuget\\packages\\system.management\\6.0.0\\system.management.6.0.0.nupkg.sha512",
-    "C:\\Users\\reveszg\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
-    "C:\\Users\\reveszg\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\6.0.2\\microsoft.netcore.app.runtime.win-x64.6.0.2.nupkg.sha512",
-    "C:\\Users\\reveszg\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\6.0.2\\microsoft.windowsdesktop.app.runtime.win-x64.6.0.2.nupkg.sha512",
-    "C:\\Users\\reveszg\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\6.0.2\\microsoft.aspnetcore.app.runtime.win-x64.6.0.2.nupkg.sha512"
+    "C:\\Users\\reveszg\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
   ],
   "logs": []
 }

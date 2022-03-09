@@ -1,0 +1,30 @@
+﻿@using global::Shared.Helpers
+
+@if (!_isLoading)
+{
+    <div class="d-flex flex-wrap mb-3 p-3 bg-light">
+        <div class="p-2 bd-highlight">
+            <button @onclick="() => OnRefreshCallback(RequestMessage.GetData)" class="btn btn-warning">Frissítés</button>
+        </div>
+        <div class="p-2 bd-highlight">
+            <button @onclick="() => OnRefreshCallback(RequestMessage.GetDataWithDetails)" class="btn btn-warning">Részletes frissítés</button>
+        </div>
+        <div class="p-2 bd-highlight">
+        </div>
+        <div class="flex-fill"></div>
+        <div class="p-2 align-self-center">@_lastRefresh</div>
+    </div>
+
+    <div class="mb-3">
+        @foreach (var context in _runningContexts)
+        {
+            <p>@context</p>
+        }
+    </div>
+
+    <button @onclick="OnStopCallback" class="btn btn-danger btn-lg btn-block">Leállítás</button>
+}
+else
+{
+    <Spinner></Spinner>
+}

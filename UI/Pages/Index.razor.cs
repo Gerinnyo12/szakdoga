@@ -1,88 +1,68 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Shared;
-using Shared.Models;
 using System.ServiceProcess;
 using UI.Helpers;
 
 namespace UI.Pages
 {
-    public enum ServiceState
-    {
-        Loading,
-        Running,
-        Stopped,
-        Unavailable,
-    }
-
     public partial class Index
     {
+        private ServiceState _state = ServiceState.Unavailable;
+        private ServiceController? _serviceController;
+        private readonly double _secondsToWaitForService = Constants.MAX_SECONDS_TO_WAIT_FOR_SERVICE;
+
         [Inject]
         private IJSRuntime JSRuntime { get; set; }
-        private AppSettingsModel Model { get; set; } = new();
-        private string _appSettingsPath;
-        private string _serviceName;
-        private double _maxSecondsUntilServiceStarts;
-        private ServiceState _state = ServiceState.Stopped;
-        private ServiceController? _serviceController;
 
-        protected override void OnInitialized()
+        protected override async Task OnInitializedAsync()
         {
-            base.OnInitialized();
+            await base.OnInitializedAsync();
+            if (!Constants.IS_WINDOWS) return;
             try
             {
-                _appSettingsPath = Constants.APP_SETTINGS_JSON_PATH;
-                _serviceName = Constants.SERVICE_NAME;
-                _maxSecondsUntilServiceStarts = Constants.MAX_SECONDS_UNTIL_SERVICE_STARTS;
+                _serviceController = new(Constants.SERVICE_NAME);
+                SetCurrentState();
             }
-            catch (Exception ex)
-            {
-                _state = ServiceState.Unavailable;
-                return;
-            }
-            //itt a kontroller mar nem lehet null mert le van kezelve ha nem letezne a szerviz
-            _serviceController = new(_serviceName);
-            if (_serviceController.Status == ServiceControllerStatus.Running || _serviceController.Status == ServiceControllerStatus.StartPending)
-            {
-                _state = ServiceState.Running;
-            }
+            catch (Exception ex) { await JSRuntime.ErrorSwal("Hiba", ex.Message); }
         }
 
-        private async Task OnStart()
+        public bool StartService()
         {
-            var json = JsonConverter.Serialize(Model);
-            File.WriteAllText(_appSettingsPath, json);
-            await StartService();
-        }
-
-        private async Task StartService()
-        {
+            //Win32Eception-t tud dobni, csak nem irja
+            //a komponensben elkapom
             _serviceController?.Start();
-            _state = ServiceState.Loading;
-            await Task.Run(() =>
-            {
-                _serviceController?.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(_maxSecondsUntilServiceStarts));
-            });
-            _state = ServiceState.Running;
-            await JSRuntime.SuccessAlert("Siker", "A szervíz sikeresen elindult!");
+            _serviceController?.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(_secondsToWaitForService));
+            SetCurrentState();
+            return _state == ServiceState.Running;
         }
 
-        private async Task OnStop()
+        public bool StopService()
         {
             _serviceController?.Stop();
-            _state = ServiceState.Loading;
-            await Task.Run(() =>
-            {
-                _serviceController?.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(_maxSecondsUntilServiceStarts));
-            });
-            _state = ServiceState.Stopped;
-            await JSRuntime.SuccessAlert("Siker", "A szervíz sikeresen leállítva!");
+            _serviceController?.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(_secondsToWaitForService));
+            SetCurrentState();
+            return _state == ServiceState.Stopped;
         }
 
-        private async Task OnRefresh()
+        private void SetCurrentState()
         {
-            //TODO
+            _state = IsServiceRunning() ? ServiceState.Running : ServiceState.Stopped;
+            //ez azert kell ide. hogy renderelje ujra a switch-et
+            StateHasChanged();
         }
 
+        public bool IsServiceRunning() =>
+            _serviceController?.Status == ServiceControllerStatus.Running
+            || _serviceController?.Status == ServiceControllerStatus.StartPending;
+
+        public async Task SuccessAlerter(string message) => 
+            await JSRuntime.SuccessAlert("Siker", message);
+
+        public async Task ErrorAlerter(string message) =>
+            await JSRuntime.ErrorAlert("Hiba", message);
+
+        private async Task ExceptionAlerter(Exception ex) => 
+            await JSRuntime.ErrorAlert("Kivétel dobódott!", $"{ex.Message} {Environment.NewLine} {ex.InnerException}");
     }
 }

@@ -1,4 +1,6 @@
-﻿using Service.Interfaces;
+﻿using Service.Helpers;
+using Service.Interfaces;
+using Shared.Helpers;
 
 namespace Service.Implementations
 {
@@ -6,15 +8,18 @@ namespace Service.Implementations
     {
         public Dictionary<string, IAssemblyContext> Contexts { get; private set; }
         public IZipExtracter ZipExtracter { get; private set; }
+        private readonly IListener _listener;
         private readonly ILogger<ContextContainer> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public ContextContainer(IZipExtracter zipExtracter, IServiceScopeFactory serviceScopeFactory, ILogger<ContextContainer> logger)
+        public ContextContainer(IZipExtracter zipExtracter, IListener listener, IServiceScopeFactory serviceScopeFactory, ILogger<ContextContainer> logger)
         {
             Contexts = new Dictionary<string, IAssemblyContext>();
             ZipExtracter = zipExtracter;
+            _listener = listener;
             _serviceScopeFactory = serviceScopeFactory;
             _logger = logger;
+            _listener.StartListening(CreateJsonData);
         }
 
         public async Task<bool> LoadAssemblyWithReferences(string zipPath, int maxCopyTimeInMiliSec)
@@ -72,6 +77,13 @@ namespace Service.Implementations
             Contexts.Remove(zipPath);
             _logger.LogInformation($"A(z) {zipPath} sikeresen el lett engedve es ki lett torolve.");
             return true;
+        }
+
+        public async Task<string> CreateJsonData(RequestMessage requestMessage)
+        {
+            return await JsonHelper.SerializeAsync(requestMessage == RequestMessage.GetData 
+                ? Contexts.Keys.Select(key => FileHelper.GetFileName(key, withoutExtension: true)) 
+                : Contexts.Keys);
         }
     }
 }

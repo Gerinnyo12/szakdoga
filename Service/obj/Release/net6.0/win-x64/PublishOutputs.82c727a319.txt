@@ -1,0 +1,7 @@
+C:\GitRepos\szakdoga\Service\Release\nlog.config
+C:\GitRepos\szakdoga\Service\Release\appsettings.Development.json
+C:\GitRepos\szakdoga\Service\Release\appsettings.json
+C:\GitRepos\szakdoga\Service\Release\Service.pdb
+C:\GitRepos\szakdoga\Service\Release\aspnetcorev2_inprocess.dll
+C:\GitRepos\szakdoga\Service\Release\Shared.pdb
+C:\GitRepos\szakdoga\Service\Release\Service.exe

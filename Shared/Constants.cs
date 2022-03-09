@@ -1,4 +1,7 @@
-﻿using System.Management;
+﻿using Shared.Helpers;
+using System.Management;
+using System.Net;
+using System.Runtime.InteropServices;
 
 namespace Shared
 {
@@ -8,7 +11,13 @@ namespace Shared
         public static string SHARED_PROJECT_NAME = "Shared";
         public static string I_WORKER_TASK = "IWorkerTask";
         public static string DLL_EXTENSION = ".dll";
-        public static double MAX_SECONDS_UNTIL_SERVICE_STARTS = 30;
+        public static string RESPONSE_STRING_WHEN_LISTENER_STOPS = "Leall a listener!";
+        public static string RESPONSE_JSON_WHEN_LISTENER_STOPS = JsonHelper.Serialize(RESPONSE_STRING_WHEN_LISTENER_STOPS);
+        public static double MAX_SECONDS_TO_WAIT_FOR_SERVICE = 15;
+        public static IPAddress IP_ADDRESS = Dns.GetHostEntry("localhost").AddressList[0];
+        public static int PORT = 5678;
+        public static int MAX_LENGTH_OF_TCP_REQUEST = 30;
+        public static int MAX_LENGTH_OF_TCP_RESPONSE = 10000;
 
         public static string SERVICE_NAME = "Scheduler";
         public static string SERVICE_DIR_PATH;
@@ -22,8 +31,12 @@ namespace Shared
         private static string RUNNER_DIR_NAME = "Runner";
         public static string RUNNER_DIR_PATH;
 
+        public static bool IS_WINDOWS = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
         static Constants()
         {
+            if (!IS_WINDOWS) return;
+
             using (ManagementObject wmiService = new($"Win32_Service.Name='{SERVICE_NAME}'"))
             {
                 wmiService?.Get();

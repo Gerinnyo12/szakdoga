@@ -1,4 +1,6 @@
-﻿namespace Service.Interfaces
+﻿using Shared.Helpers;
+
+namespace Service.Interfaces
 {
     public interface IContextContainer
     {
@@ -7,5 +9,6 @@
         Task<bool> LoadAssemblyWithReferences(string zipPath, int maxCopyTimeInMiliSec);
         Task ExecuteContainer();
         Task<bool> FindAndRemoveAssembly(string zipPath);
+        Task<string> CreateJsonData(RequestMessage requestMessage);
     }
 }

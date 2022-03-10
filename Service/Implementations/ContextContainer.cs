@@ -24,17 +24,20 @@ namespace Service.Implementations
 
         public async Task<bool> LoadAssemblyWithReferences(string zipPath, int maxCopyTimeInMiliSec)
         {
-            // a file az nyilvan letezik mert azert hivodott meg a callback
             if (string.IsNullOrEmpty(zipPath))
             {
-                _logger.LogError("A(z) {nameof(zipPath)} parameter nem lehet null vagy ures.", nameof(zipPath));
+                _logger.LogError("A(z) {nameof(zipPath)} paraméter se null se üres nem lehet.", nameof(zipPath));
+                return false;
+            }
+            if (!FileHelper.FileExists(zipPath))
+            {
+                _logger.LogError("Nem létezik a(z) {zipPath} útvonalú file!", zipPath);
                 return false;
             }
 
             string? rootDirPath = await ZipExtracter.ExtractZip(zipPath, maxCopyTimeInMiliSec);
             if (rootDirPath is null)
             {
-                _logger.LogError("Nem sikerult a {zipPath} kicsomagolasa", zipPath);
                 return false;
             }
 
@@ -43,13 +46,13 @@ namespace Service.Implementations
             bool success = context.Load(rootDirPath);
             if (!success)
             {
-                _logger.LogError($"Nem sikerult betolteni a(z) {zipPath} projektet.");
+                _logger.LogError("Nem sikerült betölteni a(z) {zipPath} projektet.", zipPath);
                 await context.UnloadContext();
                 return false;
             }
 
             Contexts.Add(zipPath, context);
-            _logger.LogInformation("{zipPath} sikeresen be lett toltve!", zipPath);
+            _logger.LogInformation("{zipPath} sikeresen be lett töltve!", zipPath);
             return true;
         }
 
@@ -69,18 +72,24 @@ namespace Service.Implementations
         {
             if (!Contexts.TryGetValue(zipPath, out var context))
             {
-                _logger.LogInformation($"A(z) {zipPath} alapbol se volt betoltve.");
+                _logger.LogInformation("A(z) {zipPath} alapból se volt betöltve, ezért nem is törlődik ki.", zipPath);
                 return false;
             }
 
             await context.UnloadContext();
             Contexts.Remove(zipPath);
-            _logger.LogInformation($"A(z) {zipPath} sikeresen el lett engedve es ki lett torolve.");
+            _logger.LogInformation("A(z) {zipPath} sikeresen el lett engedve és ki lett törölve.", zipPath);
             return true;
         }
 
         public async Task<string> CreateJsonData(RequestMessage requestMessage)
         {
+            if (requestMessage == RequestMessage.Indefinit)
+            {
+                //TODO
+                return "Ejjejj, egy RequestMessage enum értéket adj at a listenernek...";
+            }
+
             return await JsonHelper.SerializeAsync(requestMessage == RequestMessage.GetData 
                 ? Contexts.Keys.Select(key => FileHelper.GetFileName(key, withoutExtension: true)) 
                 : Contexts.Keys);

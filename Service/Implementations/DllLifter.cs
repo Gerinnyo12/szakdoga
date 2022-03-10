@@ -7,16 +7,13 @@ namespace Service.Implementations
     {
         private readonly ILogger<DllLifter> _logger;
 
-        public DllLifter(ILogger<DllLifter> logger)
-        {
-            _logger = logger;
-        }
+        public DllLifter(ILogger<DllLifter> logger) => _logger = logger;
 
         public bool CreateRunnerDir(string rootDirName)
         {
             if (string.IsNullOrEmpty(rootDirName))
             {
-                _logger.LogError($"A(z) {nameof(rootDirName)} nem lehet se ures se null.");
+                _logger.LogError("A(z) {nameof(rootDirName)} paraméter se null se üres nem lehet.", nameof(rootDirName));
             }
 
             string rootDirPath = FileHelper.CombinePaths(FileHelper.RunnerDir, rootDirName);
@@ -27,7 +24,7 @@ namespace Service.Implementations
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Nem sikerult a(z) {rootDirPath} nevu mappa letrehozasa: {ex.Message}");
+                _logger.LogError(ex, "Nem sikerült a(z) {rootDirPath} nevű mappa létrehozása: {ex.Message}", rootDirPath);
             }
             return false;
         }
@@ -36,12 +33,12 @@ namespace Service.Implementations
         {
             if (string.IsNullOrEmpty(rootDirName) || !FileHelper.DirExists(FileHelper.CombinePaths(FileHelper.RunnerDir, rootDirName)))
             {
-                _logger.LogError("Eloszor letre kell hozni egy gyoker mappat a CreateRunnerDir fuggveny segitsegevel");
+                _logger.LogError("Először létre kell hozni egy gyökér mappát a CreateRunnerDir függvény segítségével.");
                 return null;
             }
             if (string.IsNullOrEmpty(fileNameWithoutExtension))
             {
-                _logger.LogError($"A(z) {nameof(fileNameWithoutExtension)} nem lehet se null se ures");
+                _logger.LogError("A(z) {nameof(fileNameWithoutExtension)} paraméter se null se üres nem lehet.", nameof(fileNameWithoutExtension));
                 return null;
             }
 
@@ -60,7 +57,7 @@ namespace Service.Implementations
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Nem sikerult a(z) {dllName} nevu file masolasa {fromFilePath}-bol {toFilePath}-ba: {ex.Message}");
+                _logger.LogError(ex, "Nem sikerült a(z) {dllName} nevű file másolása {fromFilePath}-ból {toFilePath}-ba: {ex.Message}", dllName, fromFilePath, toFilePath, ex.Message);
             }
             return null;
         }
@@ -75,7 +72,7 @@ namespace Service.Implementations
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Pontosan 1 db {dllName} nevű file-nak kell léteznie a {dirName} nevu mappaban.");
+                _logger.LogError(ex, "Pontosan 1 db {dllName} nevű file-nak kell léteznie a {dirName} nevű mappában.", dllName, dirName);
             }
             return null;
         }

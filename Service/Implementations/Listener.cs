@@ -17,8 +17,14 @@ namespace Service.Implementations
 
         public async Task StartListening(Func<RequestMessage, Task<string>> GetJsonData)
         {
+            if (GetJsonData is null)
+            {
+                throw new ArgumentNullException(nameof(GetJsonData));
+            }
+
             TcpListener listener = new(_ipAddress, _port);
             listener.Start();
+            _logger.LogInformation("Sikeresen elindult a listener!");
             bool shouldStop = false;
             while (!shouldStop)
             {

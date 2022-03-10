@@ -17,10 +17,7 @@ try
 {
 
     IHost host = Host.CreateDefaultBuilder(args)
-        .UseWindowsService(options =>
-        {
-            options.ServiceName = Constants.SERVICE_NAME;
-        })
+        .UseWindowsService(options => options.ServiceName = Constants.SERVICE_NAME)
         .ConfigureServices((context, services) =>
         {
             services.AddHostedService<Motor>();

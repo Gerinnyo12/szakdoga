@@ -7,6 +7,11 @@ namespace Shared.Helpers
     {
         public static string Serialize(object obj)
         {
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
             return JsonSerializer.Serialize(obj);
         }
 
@@ -30,6 +35,7 @@ namespace Shared.Helpers
             {
                 throw new ArgumentNullException(nameof(json));
             }
+
             Tout? obj = JsonSerializer.Deserialize<Tout>(json);
             if (obj is null)
             {

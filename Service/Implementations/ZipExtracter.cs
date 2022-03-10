@@ -7,16 +7,13 @@ namespace Service.Implementations
     {
         private readonly ILogger<ZipExtracter> _logger;
 
-        public ZipExtracter(ILogger<ZipExtracter> logger)
-        {
-            _logger = logger;
-        }
+        public ZipExtracter(ILogger<ZipExtracter> logger) => _logger = logger;
 
         public async Task<string?> ExtractZip(string zipPath, int maxCopyTimeInMiliSec)
         {
             if (string.IsNullOrEmpty(zipPath))
             {
-                _logger.LogInformation($"A(z) {nameof(zipPath)} parameter nem lehet null vagy ures.");
+                _logger.LogInformation("A(z) {nameof(zipPath)} paraméter se null se üres nem lehet.", nameof(zipPath));
                 return null;
             }
 
@@ -46,7 +43,7 @@ namespace Service.Implementations
             }
             if (!isUnlocked)
             {
-                _logger.LogError($"A(z) {zipPath} masolasa nem lett kesz idoben.");
+                _logger.LogError("A(z) {zipPath} másolasá nem lett kész időben.", zipPath);
             }
             return isUnlocked;
         }
@@ -57,13 +54,13 @@ namespace Service.Implementations
             string destinationDirPath = FileHelper.CombinePaths(FileHelper.LocalDir, rootDirName);
             try
             {
-                // EZ MERGELI NEM PEDIG FELULIRJA
+                //EZ MERGELI NEM PEDIG FELULIRJA
                 FileHelper.ExtractZip(zipPath, destinationDirPath);
                 return destinationDirPath;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Nem sikerult a(z) {zipPath} kicsomagolasa a(z) {rootDirName} mappaba.");
+                _logger.LogError(ex, "Nem sikerült a(z) {zipPath} kicsomagolása a(z) {rootDirName} mappába.", zipPath);
             }
             return null;
         }
@@ -78,7 +75,7 @@ namespace Service.Implementations
             catch (Exception ex)
             {
                 //TODO HA NEM AZZAL VAN A BAJ, HOGY NEM ELERHETO A FILE
-                _logger.LogInformation(ex, $"A(z) {zipPath} masolasa meg mindig folyamatban van...");
+                _logger.LogInformation(ex, "A(z) {zipPath} másolása még mindig folyamatban van...", zipPath);
             }
             return false;
         }

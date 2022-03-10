@@ -28,7 +28,7 @@ namespace Service.Implementations
         {
             if (string.IsNullOrEmpty(rootDirPath) || !FileHelper.DirExists(rootDirPath))
             {
-                _logger.LogError($"A(z) {nameof(rootDirPath)} nem lehet null es leteznie kell az mappanak");
+                _logger.LogError("A(z) {nameof(rootDirPath)} nem lehet null és léteznie kell az mappának", nameof(rootDirPath));
                 return false;
             }
 
@@ -110,7 +110,7 @@ namespace Service.Implementations
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Nem sikerult betolteni a(z) {filePathToLoad} utvonalu assembly-t.");
+                _logger.LogError(ex, "Nem sikerült betölteni a(z) {filePathToLoad} útvonalú assembly-t.", filePathToLoad);
             }
             return null;
         }
@@ -121,45 +121,40 @@ namespace Service.Implementations
             //ilyenkor a regi toltodjon be ne az uj
             if (_referenceHelper.IsAssemblyAlreadyLoaded(assemblyName) && assemblyName.Name != Constants.SHARED_PROJECT_NAME)
             {
-                _logger.LogInformation($"A(z) {assemblyName.FullName} nevu assembly egy alap dependency, ezert nem kell betolteni");
+                _logger.LogInformation("A(z) {assemblyName.FullName} nevű assembly egy alap dependency, ezert nem kell betölteni", assemblyName.FullName);
                 return true;
             }
             else if (_assemblyLoadContext.Assemblies.Any(assembly => assembly.FullName == assemblyName.FullName))
             {
-                _logger.LogInformation($"A(z) {assemblyName.FullName} nevu assembly mar egyszer be van toltve ebbe az AppDomain-be");
+                _logger.LogInformation("A(z) {assemblyName.FullName} nevű assembly már egyszer be van töltve ebbe az AppDomain-be", assemblyName.FullName);
                 return true;
             }
             return false;
         }
 
-        public async Task InvokeRun()
-        {
-            await RunableInstance.Run();
-        }
+        public async Task InvokeRun() => await RunableInstance.Run();
 
         public async Task UnloadContext()
         {
             if (string.IsNullOrEmpty(_rootDirPath) || !FileHelper.DirExists(_rootDirPath))
             {
-                _logger.LogError($"Ahhoz, hogy ki lehessen torolni, eloszor be kell tolteni a context-et a {nameof(Load)} fuggveny segitsegevel.");
+                _logger.LogError("Ahhoz, hogy ki lehessen törölni, előszor be kell tölteni a context-et a {nameof(Load)} függény segítségével.", nameof(Load));
                 return;
             }
 
             RunableInstance?.UnleashReferences();
             _assemblyLoadContext?.Unload();
             await CallGC();
-
-            string rootDirName = FileHelper.GetFileName(_rootDirPath, withoutExtension: true);
-            string localDirPath = FileHelper.CombinePaths(FileHelper.LocalDir, rootDirName);
-            string runnerDirPath = FileHelper.CombinePaths(FileHelper.RunnerDir, rootDirName);
-            RemoveDir(localDirPath);
-            RemoveDir(runnerDirPath);
+            HandleDirDelete();
         }
 
         private async Task CallGC()
         {
+            //azert egy kulon task, mert kulonben az UnloadContext nem async futna le
             await Task.Run(() =>
             {
+                //azert kell 2x meghivni, mert 2 gc kell ahhoz, hogy kitorlodjon a memoriabol egy assembly objektum
+                //es hogy unloadolni lehessen a contextet
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
@@ -167,11 +162,20 @@ namespace Service.Implementations
             });
         }
 
+        private void HandleDirDelete()
+        {
+            string rootDirName = FileHelper.GetFileName(_rootDirPath, withoutExtension: true);
+            string localDirPath = FileHelper.CombinePaths(FileHelper.LocalDir, rootDirName);
+            string runnerDirPath = FileHelper.CombinePaths(FileHelper.RunnerDir, rootDirName);
+            RemoveDir(localDirPath);
+            RemoveDir(runnerDirPath);
+        }
+
         private void RemoveDir(string dirPath)
         {
             if (!FileHelper.DirExists(dirPath))
             {
-                _logger.LogError($"Nem letezik a(z) {dirPath} utvonalu mappa ezert nem lehet kitorolni.");
+                _logger.LogError("Nem létezik a(z) {dirPath} útvonalú mappa ezért nem lehet kitörölni.", dirPath);
                 return;
             }
             try
@@ -180,7 +184,7 @@ namespace Service.Implementations
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Nem sikerult kitorolni a(z) {dirPath} utvonalu mappat.");
+                _logger.LogError(ex, "Nem sikerült kitörölni a(z) {dirPath} útvonalú mappát.", dirPath);
             }
         }
 

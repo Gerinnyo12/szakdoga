@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Atne/5PrIgJk9eIF1Hxt/BfVjNANXJOrsGme9mYVj3mtLS02HU2ZTv0dBQb/oz8b3+AZEFkl137Gp/gYatwjHg==",
+  "dgSpecHash": "uSIuussGKpS0Txb30quww/q9g63SNCS3Novh/to3/xc1slLF4Xoa9UJrpfLGD0WBrnh0RzrZBbbSbTdPMoXTAw==",
   "success": true,
   "projectFilePath": "C:\\GitRepos\\szakdoga\\Service\\Service.csproj",
   "expectedPackageFiles": [
@@ -41,9 +41,9 @@
     "C:\\Users\\reveszg\\.nuget\\packages\\system.serviceprocess.servicecontroller\\6.0.0\\system.serviceprocess.servicecontroller.6.0.0.nupkg.sha512",
     "C:\\Users\\reveszg\\.nuget\\packages\\system.text.encodings.web\\6.0.0\\system.text.encodings.web.6.0.0.nupkg.sha512",
     "C:\\Users\\reveszg\\.nuget\\packages\\system.text.json\\6.0.0\\system.text.json.6.0.0.nupkg.sha512",
-    "C:\\Users\\reveszg\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\6.0.2\\microsoft.netcore.app.runtime.win-x64.6.0.2.nupkg.sha512",
-    "C:\\Users\\reveszg\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\6.0.2\\microsoft.windowsdesktop.app.runtime.win-x64.6.0.2.nupkg.sha512",
-    "C:\\Users\\reveszg\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\6.0.2\\microsoft.aspnetcore.app.runtime.win-x64.6.0.2.nupkg.sha512"
+    "C:\\Users\\reveszg\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\6.0.3\\microsoft.netcore.app.runtime.win-x64.6.0.3.nupkg.sha512",
+    "C:\\Users\\reveszg\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\6.0.3\\microsoft.windowsdesktop.app.runtime.win-x64.6.0.3.nupkg.sha512",
+    "C:\\Users\\reveszg\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\6.0.3\\microsoft.aspnetcore.app.runtime.win-x64.6.0.3.nupkg.sha512"
   ],
   "logs": []
 }

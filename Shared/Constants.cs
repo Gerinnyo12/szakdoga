@@ -14,9 +14,8 @@ namespace Shared
         public static string RESPONSE_STRING_WHEN_LISTENER_STOPS = "Leall a listener!";
         public static string RESPONSE_JSON_WHEN_LISTENER_STOPS = JsonHelper.Serialize(RESPONSE_STRING_WHEN_LISTENER_STOPS);
         public static double MAX_SECONDS_TO_WAIT_FOR_SERVICE = 15;
-        public static IPAddress IP_ADDRESS = Dns.GetHostEntry("localhost").AddressList[0];
+        public static IPAddress IP_ADDRESS = Dns.GetHostEntry(Dns.GetHostName()).AddressList[0];
         public static int PORT = 5678;
-        public static int MAX_LENGTH_OF_TCP_REQUEST = 30;
         public static int MAX_LENGTH_OF_TCP_RESPONSE = 10000;
 
         public static string SERVICE_NAME = "Scheduler";

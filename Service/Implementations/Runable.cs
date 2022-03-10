@@ -1,6 +1,5 @@
 ﻿using Service.Interfaces;
 using Shared;
-using Shared.Interfaces;
 using System.Reflection;
 
 namespace Service.Implementations
@@ -15,16 +14,13 @@ namespace Service.Implementations
         private bool _isCurrentlyRunning;
         private bool _isRunnable = false;
 
-        public Runable(ILogger<Runable> logger)
-        {
-            _logger = logger;
-        }
+        public Runable(ILogger<Runable> logger) => _logger = logger;
 
         public bool CreateInstance(Assembly assembly)
         {
             if (assembly is null)
             {
-                _logger.LogError($"A(z) {nameof(assembly)} parameter nem lehet null.");
+                _logger.LogError("A(z) {nameof(assembly)} paraméter se null se üres nem lehet.", nameof(assembly));
                 return false;
             }
 
@@ -40,7 +36,7 @@ namespace Service.Implementations
                 return false;
             }
 
-            _logger.LogInformation($"{exportedClass.FullName} sikeresen peldanyositva lett.");
+            _logger.LogInformation("A(z) {exportedClass.FullName} sikeresen példányosítva lett.", exportedClass.FullName);
             return true;
         }
 
@@ -52,7 +48,7 @@ namespace Service.Implementations
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"A futtatando assembly ({assembly.FullName}) nem 1 db publikus osztalyt talalt.");
+                _logger.LogError(ex, "A futtatandó ({assembly.FullName}) assembly-ben 1 db publikus osztálynak kell léteznie.", assembly.FullName);
             }
             return null;
         }
@@ -61,7 +57,7 @@ namespace Service.Implementations
         {
             if (exportedClass.GetInterface(Constants.I_WORKER_TASK) is null)
             {
-                _logger.LogError($"A(z) {exportedClass.FullName} osztaly nem implementalja a Shared.IWorkerTask nevu interface-t.");
+                _logger.LogError("A(z) {exportedClass.FullName} osztály nem implementálja az {Constants.I_WORKER_TASK} nevű interface-t.", exportedClass.FullName, Constants.I_WORKER_TASK);
                 return false;
             }
             // Creates a new instance of the specified type. Parameters specify the assembly where the type is defined, and the name of the type.
@@ -71,7 +67,7 @@ namespace Service.Implementations
             var timer = (uint?)timerPropety?.GetValue(instance);
             if (CheckIfPropertyIsNull(instance, runMethod, timer))
             {
-                _logger.LogError($"Nem sikerult peldanyositani a(z) {exportedClass.FullName} nevu assemblyt");
+                _logger.LogError("Nem sikerült példányosítani a(z) {exportedClass.FullName} nevű assemblyt", exportedClass.FullName);
                 return false;
             }
             _instance = instance;
@@ -99,7 +95,7 @@ namespace Service.Implementations
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"A(z) {_instance?.GetType()} hibat dobott futas kozben.");
+                _logger.LogError(ex, "A(z) {_instance?.GetType()} hibát dobott futás közben.", _instance?.GetType());
             }
             finally
             {

@@ -6,10 +6,7 @@ namespace Service
     {
         private readonly IHandler _handler;
 
-        public Motor(IHandler handler)
-        {
-            _handler = handler;
-        }
+        public Motor(IHandler handler) => _handler = handler;
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {

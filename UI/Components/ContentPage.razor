@@ -15,7 +15,8 @@
         <div class="p-2 align-self-center">@_lastRefresh</div>
     </div>
 
-    <div class="mb-3">
+    <p>A jelenleg futó projektek: </p>
+    <div class="bg-light mb-3">
         @foreach (var context in _runningContexts)
         {
             <p>@context</p>

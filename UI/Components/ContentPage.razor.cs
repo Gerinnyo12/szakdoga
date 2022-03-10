@@ -23,6 +23,15 @@ namespace UI.Components
         [Parameter]
         public EventCallback<Exception> ExceptionAlerter { get; set; }
 
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            if (firstRender)
+            {
+                await OnRefreshCallback(RequestMessage.GetData);
+            }
+        }
+
         private async Task OnRefreshCallback(RequestMessage requestMessage)
         {
             IEnumerable<string>? obj = await HandleRequest<IEnumerable<string>>(requestMessage);
@@ -60,11 +69,11 @@ namespace UI.Components
             return default;
         }
 
-        private async Task RefreshUI(object obj)
+        private async Task RefreshUI(IEnumerable<string> updatedData)
         {
             _lastRefresh = DateTime.Now;
-            _runningContexts = obj as IEnumerable<string> ?? Enumerable.Empty<string>();
-            await SuccessAlerter.InvokeAsync("Sikeres frissítés!");
+            _runningContexts = updatedData;
+            await SuccessAlerter.InvokeAsync("Az adatok frissültek!");
         }
 
         private async Task OnStopCallback()

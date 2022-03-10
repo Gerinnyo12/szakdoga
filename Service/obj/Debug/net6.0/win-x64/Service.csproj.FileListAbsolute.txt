@@ -361,7 +361,6 @@ C:\GitRepos\szakdoga\Service\bin\Debug\net6.0\win-x64\dbgshim.dll
 C:\GitRepos\szakdoga\Service\bin\Debug\net6.0\win-x64\hostfxr.dll
 C:\GitRepos\szakdoga\Service\bin\Debug\net6.0\win-x64\hostpolicy.dll
 C:\GitRepos\szakdoga\Service\bin\Debug\net6.0\win-x64\mscordaccore.dll
-C:\GitRepos\szakdoga\Service\bin\Debug\net6.0\win-x64\mscordaccore_amd64_amd64_6.0.222.6406.dll
 C:\GitRepos\szakdoga\Service\bin\Debug\net6.0\win-x64\mscordbi.dll
 C:\GitRepos\szakdoga\Service\bin\Debug\net6.0\win-x64\mscorrc.dll
 C:\GitRepos\szakdoga\Service\bin\Debug\net6.0\win-x64\msquic.dll
@@ -379,3 +378,8 @@ C:\GitRepos\szakdoga\Service\obj\Debug\net6.0\win-x64\Service.dll
 C:\GitRepos\szakdoga\Service\obj\Debug\net6.0\win-x64\ref\Service.dll
 C:\GitRepos\szakdoga\Service\obj\Debug\net6.0\win-x64\Service.pdb
 C:\GitRepos\szakdoga\Service\obj\Debug\net6.0\win-x64\Service.genruntimeconfig.cache
+C:\GitRepos\szakdoga\Service\bin\Debug\net6.0\win-x64\Release\nlog.config
+C:\GitRepos\szakdoga\Service\bin\Debug\net6.0\win-x64\Release\appsettings.Development.json
+C:\GitRepos\szakdoga\Service\bin\Debug\net6.0\win-x64\Release\appsettings.json
+C:\GitRepos\szakdoga\Service\bin\Debug\net6.0\win-x64\api-ms-win-core-fibers-l1-1-0.dll
+C:\GitRepos\szakdoga\Service\bin\Debug\net6.0\win-x64\mscordaccore_amd64_amd64_6.0.322.12309.dll

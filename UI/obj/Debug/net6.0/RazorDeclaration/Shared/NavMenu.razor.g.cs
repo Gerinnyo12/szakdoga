@@ -90,7 +90,7 @@ using UI.Shared;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 20 "C:\GitRepos\szakdoga\UI\Shared\NavMenu.razor"
+#line 21 "C:\GitRepos\szakdoga\UI\Shared\NavMenu.razor"
        
     private bool collapseNavMenu = true;
 

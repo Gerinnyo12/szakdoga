@@ -1,6 +1,6 @@
 ﻿@page "/"
 @using UI.Components
-@using UI.Helpers
+@using UI.Models
 
 <PageTitle>Scheduler</PageTitle>
 <div class=".container">
@@ -14,13 +14,17 @@
             break;
         case ServiceState.Running:
             <ContentPage StopService="StopService"
-             IsServiceStillRunning="IsServiceRunning"
-             SuccessAlerter="SuccessAlerter"
-             ErrorAlerter="ErrorAlerter"
-             ExceptionAlerter="ExceptionAlerter"></ContentPage>
+                 IsServiceStillRunning="IsServiceRunning"
+                 SetCurrentState="SetCurrentState"
+                 SuccessAlerter="SuccessAlerter"
+                 ErrorAlerter="ErrorAlerter"
+                 ExceptionAlerter="ExceptionAlerter"></ContentPage>
+            break;
+        case ServiceState.Unavailable:
+            <Unavailable></Unavailable>
             break;
         default:
-            <Unavailable></Unavailable>
+            <Spinner></Spinner>
             break;
     }
 </div>

@@ -13,10 +13,8 @@ namespace Shared.Helpers
             return GetStringFromBytes(request, bytesRead);
         }
 
-        private static string GetStringFromBytes(byte[] bytes, int lengthOfBytes)
-        {
-            return Encoding.UTF8.GetString(bytes, 0, lengthOfBytes);
-        }
+        private static string GetStringFromBytes(byte[] bytes, int lengthOfBytes) => 
+            Encoding.UTF8.GetString(bytes, 0, lengthOfBytes);
 
         public static async Task WriteJsonToStream(NetworkStream stream, string json)
         {
@@ -24,9 +22,8 @@ namespace Shared.Helpers
             await stream.WriteAsync(response, 0, response.Length);
         }
 
-        private static byte[] MakeBytesFromString(string json)
-        {
-            return Encoding.UTF8.GetBytes(json);
-        }
+        private static byte[] MakeBytesFromString(string json) => 
+            Encoding.UTF8.GetBytes(json);
+
     }
 }

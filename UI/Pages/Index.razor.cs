@@ -3,28 +3,39 @@ using Microsoft.JSInterop;
 using Shared;
 using System.ServiceProcess;
 using UI.Helpers;
+using UI.Models;
 
 namespace UI.Pages
 {
     public partial class Index
     {
-        private ServiceState _state = ServiceState.Unavailable;
+        private ServiceState _state = ServiceState.Loading;
         private ServiceController? _serviceController;
-        private readonly double _secondsToWaitForService = Constants.MAX_SECONDS_TO_WAIT_FOR_SERVICE;
+        private double _secondsToWaitForService;
 
         [Inject]
         private IJSRuntime JSRuntime { get; set; }
 
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            await base.OnInitializedAsync();
-            if (!Constants.IS_WINDOWS) return;
+            await base.OnAfterRenderAsync(firstRender);
+            if (!firstRender) return;
             try
             {
-                _serviceController = new(Constants.SERVICE_NAME);
-                SetCurrentState();
+                if (Constants.IS_WINDOWS)
+                {
+                    _secondsToWaitForService = Constants.MAX_SECONDS_TO_WAIT_FOR_SERVICE;
+                    _serviceController = new(Constants.SERVICE_NAME);
+                    SetCurrentState();
+                    return;
+                }
             }
-            catch (Exception ex) { await JSRuntime.ErrorSwal("Hiba", ex.Message); }
+            catch (Exception ex)
+            {
+                await JSRuntime.ErrorSwal("Hiba", $"Hiba történt inicializáláskor! {ex.Message} {ex.InnerException}");
+            }
+            _state = ServiceState.Unavailable;
+            StateHasChanged();
         }
 
         public bool StartService()
@@ -52,17 +63,20 @@ namespace UI.Pages
             StateHasChanged();
         }
 
-        public bool IsServiceRunning() =>
-            _serviceController?.Status == ServiceControllerStatus.Running
-            || _serviceController?.Status == ServiceControllerStatus.StartPending;
+        public bool IsServiceRunning()
+        {
+            _serviceController?.Refresh();
+            return _serviceController?.Status == ServiceControllerStatus.Running
+                || _serviceController?.Status == ServiceControllerStatus.StartPending;
+        }
 
-        public async Task SuccessAlerter(string message) => 
+        public async Task SuccessAlerter(string message) =>
             await JSRuntime.SuccessAlert("Siker", message);
 
         public async Task ErrorAlerter(string message) =>
             await JSRuntime.ErrorAlert("Hiba", message);
 
-        private async Task ExceptionAlerter(Exception ex) => 
+        public async Task ExceptionAlerter(Exception ex) =>
             await JSRuntime.ErrorAlert("Kivétel dobódott!", $"{ex.Message} {Environment.NewLine} {ex.InnerException}");
     }
 }

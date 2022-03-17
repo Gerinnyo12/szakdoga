@@ -6,6 +6,8 @@ namespace Service.Implementations
 {
     public class Runable : IRunable
     {
+        public Runable(ILogger<Runable> logger) => _logger = logger;
+
         private readonly ILogger<Runable> _logger;
         private object? _instance;
         private MethodInfo? _runMethod;
@@ -13,8 +15,6 @@ namespace Service.Implementations
         private ulong _startedAt;
         private bool _isCurrentlyRunning;
         private bool _isRunnable = false;
-
-        public Runable(ILogger<Runable> logger) => _logger = logger;
 
         public bool CreateInstance(Assembly assembly)
         {
@@ -65,7 +65,7 @@ namespace Service.Implementations
             var runMethod = exportedClass.GetMethod("Run");
             var timerPropety = exportedClass.GetProperty("Timer");
             var timer = (uint?)timerPropety?.GetValue(instance);
-            if (CheckIfPropertyIsNull(instance, runMethod, timer))
+            if (CheckIfPropertiesAreNull(instance, runMethod, timer))
             {
                 _logger.LogError("Nem sikerült példányosítani a(z) {exportedClass.FullName} nevű assemblyt", exportedClass.FullName);
                 return false;
@@ -79,7 +79,7 @@ namespace Service.Implementations
             return true;
         }
 
-        private bool CheckIfPropertyIsNull(object? instance, MethodInfo? runMethod, uint? timer) =>
+        private bool CheckIfPropertiesAreNull(object? instance, MethodInfo? runMethod, uint? timer) =>
             instance is null || runMethod is null || timer is null || timer == 0;
 
         public async Task Run()

@@ -1,29 +1,47 @@
-﻿@using global::Shared.Helpers
+﻿@using global::Shared.Models
 
 @if (!_isLoading)
 {
     <div class="d-flex flex-wrap mb-3 p-3 bg-light">
         <div class="p-2 bd-highlight">
-            <button @onclick="() => OnRefreshCallback(RequestMessage.GetData)" class="btn btn-warning">Frissítés</button>
+            <button @onclick="() => OnRefreshCallback(RequestMessage.GetData)" class="btn btn-warning">
+                <i class="fas fa-sync"></i>
+                Frissítés
+            </button>
         </div>
+        @*<div class="p-2 bd-highlight">
+            <button @onclick="() => OnRefreshCallback(RequestMessage.GetDataWithDetails)" class="btn btn-warning">
+            <i class="fas fa-sync"></i>
+            Részletes frissítés
+            </button>
+            </div>*@
         <div class="p-2 bd-highlight">
-            <button @onclick="() => OnRefreshCallback(RequestMessage.GetDataWithDetails)" class="btn btn-warning">Részletes frissítés</button>
+            <InputFile id="filePicker" OnChange="UploadFile" class="d-none" accept=".zip" multiple></InputFile>
+            <button onclick="document.getElementById('filePicker').click()" class="btn btn-warning">
+                <i class="fas fa-cloud-upload-alt"></i>
+                Betöltés
+            </button>
         </div>
-        <div class="p-2 bd-highlight">
-        </div>
-        <div class="flex-fill"></div>
-        <div class="p-2 align-self-center">@_lastRefresh</div>
     </div>
 
-    <p>A jelenleg futó projektek: </p>
-    <div class="bg-light mb-3">
+    <div class="bg-light mb-3 p-3">
+        <div class="d-flex flex-wrap">
+            <div class="font-weight-bold">A jelenleg futó projektek:</div>
+            <div class="flex-fill"></div>
+            <div class="font-italic">Utolsó frissítés időpontja: @_lastRefresh</div>
+        </div>
         @foreach (var context in _runningContexts)
         {
-            <p>@context</p>
+            <div class="d-flex flex-wrap bg-info p-2 mt-2 elevating-button">
+                <button @onclick="() => RemoveFile(context)" class="btn btn-danger">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <span class="p-2">@context</span>
+            </div>
         }
     </div>
 
-    <button @onclick="OnStopCallback" class="btn btn-danger btn-lg btn-block">Leállítás</button>
+    <button @onclick="OnStopCallback" class="btn btn-danger btn-lg btn-block elevating-button">Leállítás</button>
 }
 else
 {

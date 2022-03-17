@@ -7,17 +7,6 @@ namespace UI.Components
 {
     public partial class StartPage
     {
-        private readonly string _appSettingsPath = Constants.APP_SETTINGS_JSON_PATH;
-        private bool _isLoading = false;
-        private AppSettingsModel Model { get; set; } = new()
-        {
-            Parameters = new()
-            {
-                Path = @"C:\Users\reveszg\Desktop\Watched_Folder",
-                Pattern = "Asd*",
-                MaxCopyTimeInMiliSec = 1000,
-            }
-        };
 
         [Parameter]
         public Func<bool>? StartService { get; set; }
@@ -27,6 +16,10 @@ namespace UI.Components
         public EventCallback<string> ErrorAlerter { get; set; }
         [Parameter]
         public EventCallback<Exception> ExceptionAlerter { get; set; }
+
+        private readonly string _appSettingsPath = Constants.APP_SETTINGS_JSON_PATH;
+        private bool _isLoading = false;
+        private AppSettingsModel Model { get; set; } = new();
 
         private async Task OnStartCallback()
         {
@@ -41,7 +34,7 @@ namespace UI.Components
             try
             {
                 var json = await JsonHelper.SerializeAsync(Model);
-                File.WriteAllText(_appSettingsPath, json);
+                FileHelper.WriteTextToFile(_appSettingsPath, json);
                 await SuccessAlerter.InvokeAsync("Az appsettings.json sikeresen létre lett hozva!");
                 return true;
             }

@@ -1,13 +1,13 @@
-﻿using Service.Helpers;
-using Service.Interfaces;
+﻿using Service.Interfaces;
+using Shared.Helpers;
 
 namespace Service.Implementations
 {
     public class ZipExtracter : IZipExtracter
     {
-        private readonly ILogger<ZipExtracter> _logger;
-
         public ZipExtracter(ILogger<ZipExtracter> logger) => _logger = logger;
+
+        private readonly ILogger<ZipExtracter> _logger;
 
         public async Task<string?> ExtractZip(string zipPath, int maxCopyTimeInMiliSec)
         {
@@ -51,7 +51,7 @@ namespace Service.Implementations
         private string? ExtractZipAndGetRootDirPath(string zipPath)
         {
             string rootDirName = FileHelper.GetFileName(zipPath, withoutExtension: true);
-            string destinationDirPath = FileHelper.CombinePaths(FileHelper.LocalDir, rootDirName);
+            string destinationDirPath = FileHelper.GetAbsolutePathOfLocalDir(rootDirName);
             try
             {
                 //EZ MERGELI NEM PEDIG FELULIRJA
@@ -60,7 +60,7 @@ namespace Service.Implementations
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Nem sikerült a(z) {zipPath} kicsomagolása a(z) {rootDirName} mappába.", zipPath);
+                _logger.LogError(ex, "Nem sikerült a(z) {zipPath} kicsomagolása a(z) {rootDirName} mappába.", zipPath, rootDirName);
             }
             return null;
         }

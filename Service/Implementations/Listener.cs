@@ -1,6 +1,7 @@
 ﻿using Service.Interfaces;
 using Shared;
 using Shared.Helpers;
+using Shared.Models;
 using System.Net;
 using System.Net.Sockets;
 
@@ -8,12 +9,12 @@ namespace Service.Implementations
 {
     public class Listener : IListener
     {
+        public Listener(ILogger<Listener> logger) => _logger = logger;
+
         private readonly IPAddress _ipAddress = Constants.IP_ADDRESS;
         private readonly int _port = Constants.PORT;
         private readonly string _responseWhenListenerStops = Constants.RESPONSE_JSON_WHEN_LISTENER_STOPS;
         private readonly ILogger<Listener> _logger;
-
-        public Listener(ILogger<Listener> logger) => _logger = logger;
 
         public async Task StartListening(Func<RequestMessage, Task<string>> GetJsonData)
         {

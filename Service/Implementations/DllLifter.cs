@@ -1,13 +1,13 @@
-﻿using Service.Helpers;
-using Service.Interfaces;
+﻿using Service.Interfaces;
+using Shared.Helpers;
 
 namespace Service.Implementations
 {
     public class DllLifter : IDllLifter
     {
-        private readonly ILogger<DllLifter> _logger;
-
         public DllLifter(ILogger<DllLifter> logger) => _logger = logger;
+
+        private readonly ILogger<DllLifter> _logger;
 
         public bool CreateRunnerDir(string rootDirName)
         {
@@ -16,7 +16,7 @@ namespace Service.Implementations
                 _logger.LogError("A(z) {nameof(rootDirName)} paraméter se null se üres nem lehet.", nameof(rootDirName));
             }
 
-            string rootDirPath = FileHelper.CombinePaths(FileHelper.RunnerDir, rootDirName);
+            string rootDirPath = FileHelper.GetAbsolutePathOfRunDir(rootDirName);
             try
             {
                 FileHelper.CreateDir(rootDirPath);
@@ -31,7 +31,7 @@ namespace Service.Implementations
 
         public string? CopyFileToRunnerDir(string rootDirName, string fileNameWithoutExtension)
         {
-            if (string.IsNullOrEmpty(rootDirName) || !FileHelper.DirExists(FileHelper.CombinePaths(FileHelper.RunnerDir, rootDirName)))
+            if (string.IsNullOrEmpty(rootDirName) || !FileHelper.DirExists(FileHelper.GetAbsolutePathOfRunDir(rootDirName)))
             {
                 _logger.LogError("Először létre kell hozni egy gyökér mappát a CreateRunnerDir függvény segítségével.");
                 return null;
@@ -49,7 +49,8 @@ namespace Service.Implementations
                 return null;
             }
 
-            string toFilePath = FileHelper.CombinePaths(FileHelper.RunnerDir, rootDirName, dllName);
+            string rootDirPath = FileHelper.GetAbsolutePathOfRunDir(rootDirName);
+            string toFilePath = FileHelper.CombinePaths(rootDirPath, dllName);
             try
             {
                 FileHelper.CopyFile(fromFilePath, toFilePath);
@@ -62,17 +63,17 @@ namespace Service.Implementations
             return null;
         }
 
-        private string? GetPathOfFileFromDir(string dirName, string dllName)
+        private string? GetPathOfFileFromDir(string rootDirName, string dllName)
         {
             try
             {
-                string dirPath = FileHelper.CombinePaths(FileHelper.LocalDir, dirName);
+                string dirPath = FileHelper.GetAbsolutePathOfLocalDir(rootDirName);
                 string filePath = FileHelper.GetSingleFile(dirPath, dllName);
                 return filePath;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Pontosan 1 db {dllName} nevű file-nak kell léteznie a {dirName} nevű mappában.", dllName, dirName);
+                _logger.LogError(ex, "Pontosan 1 db {dllName} nevű file-nak kell léteznie a {dirName} nevű mappában.", dllName, rootDirName);
             }
             return null;
         }

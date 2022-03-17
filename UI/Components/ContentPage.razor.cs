@@ -1,27 +1,32 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Shared;
 using Shared.Helpers;
+using Shared.Models;
 using System.Net.Sockets;
 
 namespace UI.Components
 {
     public partial class ContentPage
     {
-        private readonly string _hostName = Constants.IP_ADDRESS.ToString();
-        private readonly int _port = Constants.PORT;
-        private bool _isLoading = false;
-        private IEnumerable<string> _runningContexts = Enumerable.Empty<string>();
-        private DateTime _lastRefresh;
         [Parameter]
         public Func<bool>? StopService { get; set; }
         [Parameter]
         public Func<bool>? IsServiceStillRunning { get; set; }
+        [Parameter]
+        public EventCallback SetCurrentState { get; set; }
         [Parameter]
         public EventCallback<string> SuccessAlerter { get; set; }
         [Parameter]
         public EventCallback<string> ErrorAlerter { get; set; }
         [Parameter]
         public EventCallback<Exception> ExceptionAlerter { get; set; }
+
+        private readonly string _hostName = Constants.IP_ADDRESS.ToString();
+        private readonly int _port = Constants.PORT;
+        private bool _isLoading = false;
+        private IEnumerable<string> _runningContexts = Enumerable.Empty<string>();
+        private DateTime _lastRefresh;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -49,6 +54,7 @@ namespace UI.Components
             if (!IsServiceStillRunning?.Invoke() ?? false)
             {
                 await ErrorAlerter.InvokeAsync("A frissítés során leállt a szervíz!");
+                await SetCurrentState.InvokeAsync();
             }
             return obj;
         }
@@ -108,5 +114,29 @@ namespace UI.Components
             await ErrorAlerter.InvokeAsync("A TCP listener nem állt le!");
         }
 
+        private async Task UploadFile(InputFileChangeEventArgs files)
+        {
+            foreach (var file in files.GetMultipleFiles())
+            {
+                string filePath = FileHelper.GetAbsolutePathOfMonitoredZip(file.Name);
+                await using FileStream stream = new(filePath, FileMode.Create);
+                await file.OpenReadStream().CopyToAsync(stream);
+                await SuccessAlerter.InvokeAsync($"{file.Name} sikeresen átmásolva! A további információk logolva vannak!");
+            }
+        }
+
+        private async Task RemoveFile(string fileName)
+        {
+            string filePath = FileHelper.GetAbsolutePathOfMonitoredZip(FileHelper.AppendZipExtensionToFileName(fileName));
+            try
+            {
+                FileHelper.DeleteFile(filePath);
+                await SuccessAlerter.InvokeAsync($"{fileName} sikeresen törölve! A további információk logolva vannak!");
+            }
+            catch (Exception ex) { await ExceptionAlerter.InvokeAsync(ex); }
+        }
+
+
     }
 }
+    

@@ -7,14 +7,14 @@ using Service.Interfaces;
 using Shared;
 using Shared.Models.Parameters;
 
-if (!Constants.IS_WINDOWS)
-{
-    throw new InvalidOperationException("Nem támogatott operációs rendszer");
-}
 
 var logger = LogManager.Setup().RegisterNLogWeb().GetCurrentClassLogger();
 try
 {
+    if (!Constants.IS_WINDOWS)
+    {
+        throw new InvalidOperationException("Nem támogatott operációs rendszer");
+    }
 
     IHost host = Host.CreateDefaultBuilder(args)
         .UseWindowsService(options => options.ServiceName = Constants.SERVICE_NAME)

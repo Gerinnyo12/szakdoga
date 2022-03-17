@@ -1,21 +1,25 @@
 ﻿using Microsoft.Extensions.Options;
 using Service.Interfaces;
+using Shared;
+using Shared.Helpers;
 using Shared.Models.Parameters;
 
 namespace Service.Implementations
 {
     public class Handler : IHandler
     {
-        private readonly FileSystemWatcher _fileSystemWatcher;
-        private readonly ParametersModel _parameters;
         public IContextContainer ContextContainer { get; }
         public static ulong IterationCounter { get; private set; } = 0;
+
+        private readonly string _monitoringPath = Constants.MONITORING_DIR_PATH;
+        private readonly ParametersModel _parameters;
+        private readonly FileSystemWatcher _fileSystemWatcher;
 
         public Handler(IContextContainer contextContainer, IOptions<ParametersModel> parameters)
         {
             ContextContainer = contextContainer;
             _parameters = parameters.Value;
-            _fileSystemWatcher = new FileSystemWatcher(_parameters.Path, _parameters.Pattern)
+            _fileSystemWatcher = new FileSystemWatcher(_monitoringPath, _parameters.Pattern)
             {
                 EnableRaisingEvents = true,
                 NotifyFilter = NotifyFilters.FileName,
@@ -24,19 +28,13 @@ namespace Service.Implementations
             _fileSystemWatcher.Deleted += (sender, file) => OnFileDelete(file.FullPath);
             AddExisting();
         }
+        private void AddExisting() =>
+            FileHelper.EnumerateFilesInDir(_monitoringPath, _parameters.Pattern, OnFileAdd);
 
         public async void RunDlls()
         {
             IterationCounter++;
             await ContextContainer.ExecuteContainer();
-        }
-
-        private void AddExisting()
-        {
-            foreach (var zipPath in Directory.GetFiles(_parameters.Path, _parameters.Pattern, SearchOption.TopDirectoryOnly))
-            {
-                OnFileAdd(zipPath);
-            }
         }
 
         private async void OnFileAdd(string zipPath)

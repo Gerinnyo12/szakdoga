@@ -1,4 +1,4 @@
-﻿using Shared.Helpers;
+﻿using Shared.Models;
 
 namespace Service.Interfaces
 {

@@ -3,15 +3,9 @@
     <EditForm Model="@Model.Parameters" OnValidSubmit="@OnStartCallback">
         <DataAnnotationsValidator />
         <div class="form-group mb-3 bg-light p-3">
-            <ValidationMessage For="(() => Model.Parameters.Path)"></ValidationMessage>
-            <label for="path">Abszolút útvonal</label>
-            <InputText id="path" @bind-Value="Model.Parameters.Path" class="form-control" aria-describedby="pathHelp" placeholder="C:\Work\WindowsService\Scheduler" />
-            <small id="pathHelp" class="form-text text-muted">Ez a mappa lesz figyelve a Windows Service által.</small>
-        </div>
-        <div class="form-group mb-3 bg-light p-3">
             <ValidationMessage For="(() => Model.Parameters.Pattern)"></ValidationMessage>
             <label for="pattern">Minta</label>
-            <InputText id="pattern" @bind-Value="Model.Parameters.Pattern" class="form-control" aria-describedby="patternHelp" placeholder="Griff*" />
+            <InputText id="pattern" @bind-Value="Model.Parameters.Pattern" class="form-control" aria-describedby="patternHelp" placeholder="Griff*.zip" />
             <small id="patternHelp" class="form-text text-muted">Erre a mintára illeszkedő file-okat fogja figyelni a monitorozott mappa.</small>
         </div>
         <div class="form-group mb-3 bg-light p-3">
@@ -20,7 +14,7 @@
             <InputNumber id="waitTime" @bind-Value="Model.Parameters.MaxCopyTimeInMiliSec" class="form-control" aria-describedby="waitTimeHelp" placeholder="1000" />
             <small id="waitTimeHelp" class="form-text text-muted">A zip megérkezésére vár 2 ms-t, majd 4 ms-t, majd 8 ms-t, és így tovább, de miután már elérte az itt megadott paramétert, nem vár tovább.</small>
         </div>
-        <button type="submit" class="btn btn-success btn-lg btn-block">Indítás</button>
+        <button type="submit" class="btn btn-success btn-lg btn-block elevating-button">Indítás</button>
     </EditForm>
 }
 else

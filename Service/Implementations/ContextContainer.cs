@@ -1,6 +1,6 @@
-﻿using Service.Helpers;
-using Service.Interfaces;
+﻿using Service.Interfaces;
 using Shared.Helpers;
+using Shared.Models;
 
 namespace Service.Implementations
 {
@@ -8,6 +8,7 @@ namespace Service.Implementations
     {
         public Dictionary<string, IAssemblyContext> Contexts { get; private set; }
         public IZipExtracter ZipExtracter { get; private set; }
+
         private readonly IListener _listener;
         private readonly ILogger<ContextContainer> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;

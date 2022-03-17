@@ -1,6 +1,7 @@
 ﻿using Service.Helpers;
 using Service.Interfaces;
 using Shared;
+using Shared.Helpers;
 using System.Reflection;
 using System.Runtime.Loader;
 
@@ -10,6 +11,7 @@ namespace Service.Implementations
     {
         public IRunable RunableInstance { get; private set; }
         public IDllLifter DllLifter { get; private set; }
+
         private readonly AssemblyLoadContext _assemblyLoadContext;
         private readonly ILogger<AssemblyContext> _logger;
         private readonly ReferenceHelper _referenceHelper;
@@ -136,37 +138,34 @@ namespace Service.Implementations
 
         public async Task UnloadContext()
         {
-            if (string.IsNullOrEmpty(_rootDirPath) || !FileHelper.DirExists(_rootDirPath))
+            if (string.IsNullOrEmpty(_rootDirPath))
             {
-                _logger.LogError("Ahhoz, hogy ki lehessen törölni, előszor be kell tölteni a context-et a {nameof(Load)} függény segítségével.", nameof(Load));
+                _logger.LogError("Még nem volt létrehozva a context. Ahhoz, hogy ki lehessen törölni, előszor be kell tölteni a {nameof(Load)} függény segítségével.", nameof(Load));
                 return;
             }
 
             RunableInstance?.UnleashReferences();
             _assemblyLoadContext?.Unload();
-            await CallGC();
+            CallGC();
             HandleDirDelete();
         }
 
-        private async Task CallGC()
+        private void CallGC()
         {
-            //azert egy kulon task, mert kulonben az UnloadContext nem async futna le
-            await Task.Run(() =>
-            {
-                //azert kell 2x meghivni, mert 2 gc kell ahhoz, hogy kitorlodjon a memoriabol egy assembly objektum
-                //es hogy unloadolni lehessen a contextet
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-            });
+            //ez async, mert a fuggveny amelyikbol meghivtuk async, de attol ez ugyn ugy megallitja a threadet
+            //azert kell 2x meghivni, mert 2 gc kell ahhoz, hogy kitorlodjon a memoriabol egy assembly objektum
+            //es hogy unloadolni lehessen a contextet
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         private void HandleDirDelete()
         {
             string rootDirName = FileHelper.GetFileName(_rootDirPath, withoutExtension: true);
-            string localDirPath = FileHelper.CombinePaths(FileHelper.LocalDir, rootDirName);
-            string runnerDirPath = FileHelper.CombinePaths(FileHelper.RunnerDir, rootDirName);
+            string localDirPath = FileHelper.GetAbsolutePathOfLocalDir(rootDirName);
+            string runnerDirPath = FileHelper.GetAbsolutePathOfRunDir(rootDirName);
             RemoveDir(localDirPath);
             RemoveDir(runnerDirPath);
         }
@@ -175,7 +174,7 @@ namespace Service.Implementations
         {
             if (!FileHelper.DirExists(dirPath))
             {
-                _logger.LogError("Nem létezik a(z) {dirPath} útvonalú mappa ezért nem lehet kitörölni.", dirPath);
+                _logger.LogError("Nem létezik a(z) {dirPath} útvonalú mappa ezért nem is törlődött.", dirPath);
                 return;
             }
             try

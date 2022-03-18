@@ -1,0 +1,15 @@
+C:\GitRepos\szakdoga\Tests\SlowConstructor\bin\Debug\net6.0\SlowConstructor.deps.json
+C:\GitRepos\szakdoga\Tests\SlowConstructor\bin\Debug\net6.0\SlowConstructor.dll
+C:\GitRepos\szakdoga\Tests\SlowConstructor\bin\Debug\net6.0\SlowConstructor.pdb
+C:\GitRepos\szakdoga\Tests\SlowConstructor\bin\Debug\net6.0\Shared.dll
+C:\GitRepos\szakdoga\Tests\SlowConstructor\bin\Debug\net6.0\Shared.pdb
+C:\GitRepos\szakdoga\Tests\SlowConstructor\obj\Debug\net6.0\SlowConstructor.csproj.AssemblyReference.cache
+C:\GitRepos\szakdoga\Tests\SlowConstructor\obj\Debug\net6.0\SlowConstructor.GeneratedMSBuildEditorConfig.editorconfig
+C:\GitRepos\szakdoga\Tests\SlowConstructor\obj\Debug\net6.0\SlowConstructor.AssemblyInfoInputs.cache
+C:\GitRepos\szakdoga\Tests\SlowConstructor\obj\Debug\net6.0\SlowConstructor.AssemblyInfo.cs
+C:\GitRepos\szakdoga\Tests\SlowConstructor\obj\Debug\net6.0\SlowConstructor.csproj.CoreCompileInputs.cache
+C:\GitRepos\szakdoga\Tests\SlowConstructor\obj\Debug\net6.0\SlowConstructor.csproj.CopyComplete
+C:\GitRepos\szakdoga\Tests\SlowConstructor\obj\Debug\net6.0\SlowConstructor.dll
+C:\GitRepos\szakdoga\Tests\SlowConstructor\obj\Debug\net6.0\refint\SlowConstructor.dll
+C:\GitRepos\szakdoga\Tests\SlowConstructor\obj\Debug\net6.0\SlowConstructor.pdb
+C:\GitRepos\szakdoga\Tests\SlowConstructor\obj\Debug\net6.0\ref\SlowConstructor.dll

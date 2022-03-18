@@ -1,0 +1,15 @@
+C:\GitRepos\szakdoga\Tests\NoDefaultCtor\bin\Debug\net6.0\NoDefaultCtor.deps.json
+C:\GitRepos\szakdoga\Tests\NoDefaultCtor\bin\Debug\net6.0\NoDefaultCtor.dll
+C:\GitRepos\szakdoga\Tests\NoDefaultCtor\bin\Debug\net6.0\NoDefaultCtor.pdb
+C:\GitRepos\szakdoga\Tests\NoDefaultCtor\bin\Debug\net6.0\Shared.dll
+C:\GitRepos\szakdoga\Tests\NoDefaultCtor\bin\Debug\net6.0\Shared.pdb
+C:\GitRepos\szakdoga\Tests\NoDefaultCtor\obj\Debug\net6.0\NoDefaultCtor.csproj.AssemblyReference.cache
+C:\GitRepos\szakdoga\Tests\NoDefaultCtor\obj\Debug\net6.0\NoDefaultCtor.GeneratedMSBuildEditorConfig.editorconfig
+C:\GitRepos\szakdoga\Tests\NoDefaultCtor\obj\Debug\net6.0\NoDefaultCtor.AssemblyInfoInputs.cache
+C:\GitRepos\szakdoga\Tests\NoDefaultCtor\obj\Debug\net6.0\NoDefaultCtor.AssemblyInfo.cs
+C:\GitRepos\szakdoga\Tests\NoDefaultCtor\obj\Debug\net6.0\NoDefaultCtor.csproj.CoreCompileInputs.cache
+C:\GitRepos\szakdoga\Tests\NoDefaultCtor\obj\Debug\net6.0\NoDefaultCtor.csproj.CopyComplete
+C:\GitRepos\szakdoga\Tests\NoDefaultCtor\obj\Debug\net6.0\NoDefaultCtor.dll
+C:\GitRepos\szakdoga\Tests\NoDefaultCtor\obj\Debug\net6.0\refint\NoDefaultCtor.dll
+C:\GitRepos\szakdoga\Tests\NoDefaultCtor\obj\Debug\net6.0\NoDefaultCtor.pdb
+C:\GitRepos\szakdoga\Tests\NoDefaultCtor\obj\Debug\net6.0\ref\NoDefaultCtor.dll

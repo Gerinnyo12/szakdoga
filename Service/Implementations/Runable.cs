@@ -60,14 +60,10 @@ namespace Service.Implementations
                 _logger.LogError("A(z) {exportedClass.FullName} osztály nem implementálja az {Constants.I_WORKER_TASK} nevű interface-t.", exportedClass.FullName, Constants.I_WORKER_TASK);
                 return false;
             }
-            // Creates a new instance of the specified type. Parameters specify the assembly where the type is defined, and the name of the type.
-            var instance = assembly.CreateInstance(exportedClass.FullName);
-            var runMethod = exportedClass.GetMethod("Run");
-            var timerPropety = exportedClass.GetProperty("Timer");
-            var timer = (uint?)timerPropety?.GetValue(instance);
+            (var instance, var runMethod, var timeProperty, var timer) = ConstructClassFromAssembly(assembly, exportedClass);
             if (CheckIfPropertiesAreNull(instance, runMethod, timer))
             {
-                _logger.LogError("Nem sikerült példányosítani a(z) {exportedClass.FullName} nevű assemblyt", exportedClass.FullName);
+                _logger.LogError("Nem sikerült példányosítani a(z) {exportedClass.FullName} nevű osztályt", exportedClass.FullName);
                 return false;
             }
             _instance = instance;
@@ -77,6 +73,24 @@ namespace Service.Implementations
             _isCurrentlyRunning = false;
             _isRunnable = true;
             return true;
+        }
+
+        private (object?, MethodInfo?, PropertyInfo?, uint?) ConstructClassFromAssembly(Assembly assembly, Type exportedClass)
+        {
+            try
+            {
+                // Creates a new instance of the specified type. Parameters specify the assembly where the type is defined, and the name of the type.
+                var instance = assembly.CreateInstance(exportedClass.FullName);
+                var runMethod = exportedClass.GetMethod("Run");
+                var timerPropety = exportedClass.GetProperty("Timer");
+                var timer = (uint?)timerPropety?.GetValue(instance);
+                return (instance, runMethod, timerPropety, timer);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Hiba történt a(z) {exportedClass.FullName} példányosítása során!", exportedClass.FullName);
+            }
+            return default;
         }
 
         private bool CheckIfPropertiesAreNull(object? instance, MethodInfo? runMethod, uint? timer) =>

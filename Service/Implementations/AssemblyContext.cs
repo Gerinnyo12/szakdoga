@@ -14,7 +14,7 @@ namespace Service.Implementations
 
         private readonly AssemblyLoadContext _assemblyLoadContext;
         private readonly ILogger<AssemblyContext> _logger;
-        private readonly ReferenceHelper _referenceHelper;
+        private ReferenceHelper _referenceHelper;
         private string? _rootDirPath;
 
         public AssemblyContext(IRunable runableInstance, IDllLifter dllLifter, ReferenceHelper referenceHelper, ILogger<AssemblyContext> logger)
@@ -23,6 +23,8 @@ namespace Service.Implementations
             RunableInstance = runableInstance;
             DllLifter = dllLifter;
             _referenceHelper = referenceHelper;
+            //lazy loading
+            PreLoadedAssemblies.InitDefaultAssemblies();
             _logger = logger;
         }
 
@@ -119,9 +121,7 @@ namespace Service.Implementations
 
         private bool CanSkipAssembly(AssemblyName assemblyName)
         {
-            //a Shared.dll azert kivetel mert frissulhet ugy, hogy egy dll meg az elozo verziot hasznalja
-            //ilyenkor a regi toltodjon be ne az uj
-            if (_referenceHelper.IsAssemblyAlreadyLoaded(assemblyName) && assemblyName.Name != Constants.SHARED_PROJECT_NAME)
+            if (_referenceHelper.IsAssemblyAlreadyLoaded(assemblyName))
             {
                 _logger.LogInformation("A(z) {assemblyName.FullName} nevű assembly egy alap dependency, ezert nem kell betölteni", assemblyName.FullName);
                 return true;

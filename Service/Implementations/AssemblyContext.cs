@@ -1,6 +1,5 @@
 ﻿using Service.Helpers;
 using Service.Interfaces;
-using Shared;
 using Shared.Helpers;
 using System.Reflection;
 using System.Runtime.Loader;
@@ -14,7 +13,7 @@ namespace Service.Implementations
 
         private readonly AssemblyLoadContext _assemblyLoadContext;
         private readonly ILogger<AssemblyContext> _logger;
-        private ReferenceHelper _referenceHelper;
+        private readonly ReferenceHelper _referenceHelper;
         private string? _rootDirPath;
 
         public AssemblyContext(IRunable runableInstance, IDllLifter dllLifter, ReferenceHelper referenceHelper, ILogger<AssemblyContext> logger)

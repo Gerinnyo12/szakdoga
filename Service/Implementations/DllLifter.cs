@@ -5,9 +5,9 @@ namespace Service.Implementations
 {
     public class DllLifter : IDllLifter
     {
-        public DllLifter(ILogger<DllLifter> logger) => _logger = logger;
-
         private readonly ILogger<DllLifter> _logger;
+
+        public DllLifter(ILogger<DllLifter> logger) => _logger = logger;
 
         public bool CreateRunnerDir(string rootDirName)
         {

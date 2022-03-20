@@ -81,6 +81,7 @@ namespace Service.Implementations
             Contexts.Remove(zipPath);
             _logger.LogInformation("A(z) {zipPath} sikeresen el lett engedve és ki lett törölve.", zipPath);
             return true;
+            //ez utan a kovetkezo GC elviszi a context objektumot
         }
 
         public async Task<string> CreateJsonData(RequestMessage requestMessage)

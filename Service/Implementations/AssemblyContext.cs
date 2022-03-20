@@ -22,9 +22,10 @@ namespace Service.Implementations
             RunableInstance = runableInstance;
             DllLifter = dllLifter;
             _referenceHelper = referenceHelper;
-            //lazy loading
-            PreLoadedAssemblies.InitDefaultAssemblies();
             _logger = logger;
+            //lazy loading
+            //ez a legkesobbi hely ahol inicializalni lehet az elore betoltott dll-eket
+            _referenceHelper.InitDefaultAssemblies();
         }
 
         public bool Load(string rootDirPath)

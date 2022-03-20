@@ -5,9 +5,9 @@ namespace Service.Implementations
 {
     public class ZipExtracter : IZipExtracter
     {
-        public ZipExtracter(ILogger<ZipExtracter> logger) => _logger = logger;
-
         private readonly ILogger<ZipExtracter> _logger;
+
+        public ZipExtracter(ILogger<ZipExtracter> logger) => _logger = logger;
 
         public async Task<string?> ExtractZip(string zipPath, int maxCopyTimeInMiliSec)
         {

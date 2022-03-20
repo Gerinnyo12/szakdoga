@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\GitRepos\\szakdoga\\Tests\\SlowConstructor\\SlowConstructor.csproj": {}
+    "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Tests\\SlowConstructor\\SlowConstructor.csproj": {}
   },
   "projects": {
-    "C:\\GitRepos\\szakdoga\\Tests\\SlowConstructor\\SlowConstructor.csproj": {
+    "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Tests\\SlowConstructor\\SlowConstructor.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\GitRepos\\szakdoga\\Tests\\SlowConstructor\\SlowConstructor.csproj",
+        "projectUniqueName": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Tests\\SlowConstructor\\SlowConstructor.csproj",
         "projectName": "SlowConstructor",
-        "projectPath": "C:\\GitRepos\\szakdoga\\Tests\\SlowConstructor\\SlowConstructor.csproj",
-        "packagesPath": "C:\\Users\\reveszg\\.nuget\\packages\\",
-        "outputPath": "C:\\GitRepos\\szakdoga\\Tests\\SlowConstructor\\obj\\",
+        "projectPath": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Tests\\SlowConstructor\\SlowConstructor.csproj",
+        "packagesPath": "C:\\Users\\Gerinnyo12\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Tests\\SlowConstructor\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\reveszg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Gerinnyo12\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -54,7 +58,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

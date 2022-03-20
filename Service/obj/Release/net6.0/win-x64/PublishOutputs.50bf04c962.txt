@@ -1,7 +1,0 @@
-C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\Service\Release\nlog.config
-C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\Service\Release\appsettings.Development.json
-C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\Service\Release\appsettings.json
-C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\Service\Release\Service.pdb
-C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\Service\Release\aspnetcorev2_inprocess.dll
-C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\Service\Release\Shared.pdb
-C:\Users\Gerinnyo12\Desktop\Visual Studio\szakdoga\Service\Release\Service.exe

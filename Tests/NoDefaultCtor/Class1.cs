@@ -8,7 +8,7 @@ namespace NoDefaultCtor
 
         public async Task Run()
         {
-            
+            throw new NotImplementedException();
         }
 
         public Class1(string asd, int qwe)

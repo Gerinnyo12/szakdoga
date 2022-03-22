@@ -13,7 +13,7 @@ namespace SlowConstructor
 
         public Class1()
         {
-            Thread.Sleep(10000);
+            Thread.Sleep(2000);
         }
     }
 }

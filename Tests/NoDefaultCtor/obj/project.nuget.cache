@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "9E0e3rLppXA76QGN2ml5aqezs5URighz5Sc943n/Zkm+D4e2UGC0eOebRqnVVU3uLda757ArJq4cKGITSeXNQQ==",
+  "dgSpecHash": "8TSzMbqE5dSHY+aI96xfaA0FfX3SueWyVd/HrqEoxu4HQgqpM/43jM2gdVigK27yqrTDHO4TnaRgQGQcC9ZdLA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Tests\\NoDefaultCtor\\NoDefaultCtor.csproj",
+  "projectFilePath": "C:\\GitRepos\\szakdoga\\Tests\\NoDefaultCtor\\NoDefaultCtor.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

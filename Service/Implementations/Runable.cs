@@ -14,7 +14,7 @@ namespace Service.Implementations
         private uint? _timer;
         private ulong _startedAt;
         private bool _isCurrentlyRunning;
-        private bool _isRunnable = false;
+        private bool _isLoaded = false;
 
         public bool CreateInstance(Assembly assembly)
         {
@@ -71,7 +71,7 @@ namespace Service.Implementations
             _timer = timer;
             _startedAt = Handler.IterationCounter + 1;
             _isCurrentlyRunning = false;
-            _isRunnable = true;
+            _isLoaded = true;
             return true;
         }
 
@@ -99,7 +99,7 @@ namespace Service.Implementations
         public async Task Run()
         {
             // amig nem futott le, addig nem lehet megegyszer mehivni
-            if (!_isRunnable || !CanStartRun() || _isCurrentlyRunning) return;
+            if (!_isLoaded || !CanStartRun() || _isCurrentlyRunning) return;
 
             try
             {
@@ -120,7 +120,7 @@ namespace Service.Implementations
 
         public void UnleashReferences()
         {
-            _isRunnable = false;
+            _isLoaded = false;
             _instance = null;
             _runMethod = null;
             _timer = null;

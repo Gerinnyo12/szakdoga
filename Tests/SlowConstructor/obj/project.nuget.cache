@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "LF/+Y2YX9mU8ucxPxwnWZTRnDKfhde91A+stF1BRKOPgsM/j5/cngTKwwZPz/YaEz6JP4fWxX1Zp6zMf16KOUQ==",
+  "dgSpecHash": "yAARc3uiSOh5UwUWOBNlfVcSoz8O6f2owvAvgUitdcauoKuEaKLZ6gm/ZQmH6CSPJ/0OnqFszIDwlPN1u8Jeeg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Gerinnyo12\\Desktop\\Visual Studio\\szakdoga\\Tests\\SlowConstructor\\SlowConstructor.csproj",
+  "projectFilePath": "C:\\GitRepos\\szakdoga\\Tests\\SlowConstructor\\SlowConstructor.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

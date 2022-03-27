@@ -7,35 +7,35 @@ namespace Shared
 {
     public static class Constants
     {
-        public static string PARAMETERS_NAME = "Parameters";
-        public static string SHARED_PROJECT_NAME = "Shared";
-        public static string I_WORKER_TASK = "IWorkerTask";
-        public static string DLL_EXTENSION = ".dll";
-        public static string ZIP_EXTENSION = ".zip";
+        public static readonly string PARAMETERS_NAME = "Parameters";
+        public static readonly string SHARED_PROJECT_NAME = "Shared";
+        public static readonly string I_WORKER_TASK = "IWorkerTask";
+        public static readonly string DLL_EXTENSION = ".dll";
+        public static readonly string ZIP_EXTENSION = ".zip";
 
-        public static IPAddress IP_ADDRESS = Dns.GetHostEntry(Dns.GetHostName()).AddressList[0];
-        public static int PORT = 5678;
-        public static string RESPONSE_STRING_WHEN_LISTENER_STOPS = "Leall a listener!";
-        public static string RESPONSE_JSON_WHEN_LISTENER_STOPS = JsonHelper.Serialize(RESPONSE_STRING_WHEN_LISTENER_STOPS);
-        public static double MAX_SECONDS_TO_WAIT_FOR_SERVICE = 10;
-        public static int MAX_LENGTH_OF_TCP_RESPONSE = 10000;
+        public static readonly IPAddress IP_ADDRESS = Dns.GetHostEntry(Dns.GetHostName()).AddressList[0];
+        public static readonly int PORT = 5678;
+        public static readonly string RESPONSE_STRING_WHEN_LISTENER_STOPS = "Leall a listener!";
+        public static readonly string RESPONSE_JSON_WHEN_LISTENER_STOPS = JsonHelper.Serialize(RESPONSE_STRING_WHEN_LISTENER_STOPS);
+        public static readonly double MAX_SECONDS_TO_WAIT_FOR_SERVICE = 10;
+        public static readonly int MAX_LENGTH_OF_TCP_RESPONSE = 10000;
 
-        public static string SERVICE_NAME = "Scheduler";
-        public static string SERVICE_DIR_PATH;
+        public static readonly string SERVICE_NAME = "Scheduler";
+        public static readonly string SERVICE_DIR_PATH;
 
-        private static string APP_SETTINGS_JSON = "appsettings.json";
-        public static string APP_SETTINGS_JSON_PATH;
+        public static readonly string APP_SETTINGS_JSON = "appsettings.json";
+        public static readonly string APP_SETTINGS_JSON_PATH;
 
-        private static string MONITORING_DIR_NAME = "Monitor";
-        public static string MONITORING_DIR_PATH;
+        public static readonly string MONITORING_DIR_NAME = "Monitor";
+        public static readonly string MONITORING_DIR_PATH;
 
-        private static string LOCAL_DIR_NAME = "Local";
-        public static string LOCAL_DIR_PATH;
+        public static readonly string LOCAL_DIR_NAME = "Local";
+        public static readonly string LOCAL_DIR_PATH;
 
-        private static string RUNNER_DIR_NAME = "Run";
-        public static string RUNNER_DIR_PATH;
+        public static readonly string RUNNER_DIR_NAME = "Run";
+        public static readonly string RUNNER_DIR_PATH;
 
-        public static bool IS_WINDOWS = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        public static readonly bool IS_WINDOWS = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 
         static Constants()
         {

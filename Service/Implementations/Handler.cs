@@ -22,7 +22,6 @@ namespace Service.Implementations
             _fileSystemWatcher = new FileSystemWatcher(_monitoringPath, _parameters.Pattern)
             {
                 EnableRaisingEvents = true,
-                NotifyFilter = NotifyFilters.FileName,
             };
             _fileSystemWatcher.Created += (sender, file) => OnFileAdd(file.FullPath);
             _fileSystemWatcher.Deleted += (sender, file) => OnFileDelete(file.FullPath);

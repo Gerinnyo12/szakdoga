@@ -144,10 +144,13 @@ namespace Service.Implementations
                 return;
             }
 
-            RunableInstance?.UnleashReferences();
-            _assemblyLoadContext?.Unload();
-            CallGC();
-            HandleDirDelete();
+            await Task.Run(() =>
+            {
+                RunableInstance?.UnleashReferences();
+                _assemblyLoadContext?.Unload();
+                CallGC();
+                HandleDirDelete();
+            });
         }
 
         private void CallGC()

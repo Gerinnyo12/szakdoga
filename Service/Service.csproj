@@ -7,7 +7,7 @@
 		<UserSecretsId>dotnet-Service-6332DA9A-3D40-4627-BFE7-CAF51FB99D69</UserSecretsId>
 
 		<OutputType>exe</OutputType>
-		<PublishSingleFile>true</PublishSingleFile>
+		<PublishSingleFile>false</PublishSingleFile>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<PlatformTarget>x64</PlatformTarget>
 	</PropertyGroup>

@@ -59,6 +59,7 @@ namespace Service.Implementations
 
         public async Task ExecuteContainer()
         {
+            //ilyenkor fog tovabbmenni a motor
             await Task.Run(() =>
             {
                 var contexts = Contexts.ToList();
@@ -92,8 +93,8 @@ namespace Service.Implementations
                 return "Ejjejj, egy RequestMessage enum értéket adj at a listenernek...";
             }
 
-            return await JsonHelper.SerializeAsync(requestMessage == RequestMessage.GetData 
-                ? Contexts.Keys.Select(key => FileHelper.GetFileName(key, withoutExtension: true)) 
+            return await JsonHelper.SerializeAsync(requestMessage == RequestMessage.GetData
+                ? Contexts.Keys.Select(key => FileHelper.GetFileName(key, withoutExtension: true))
                 : Contexts.Keys);
         }
     }

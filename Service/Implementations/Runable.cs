@@ -6,8 +6,6 @@ namespace Service.Implementations
 {
     public class Runable : IRunable
     {
-        public Runable(ILogger<Runable> logger) => _logger = logger;
-
         private readonly ILogger<Runable> _logger;
         private object? _instance;
         private MethodInfo? _runMethod;
@@ -15,6 +13,8 @@ namespace Service.Implementations
         private ulong _startedAt;
         private bool _isCurrentlyRunning;
         private bool _isLoaded = false;
+
+        public Runable(ILogger<Runable> logger) => _logger = logger;
 
         public bool CreateInstance(Assembly assembly)
         {
@@ -60,7 +60,7 @@ namespace Service.Implementations
                 _logger.LogError("A(z) {exportedClass.FullName} osztály nem implementálja az {Constants.I_WORKER_TASK} nevű interface-t.", exportedClass.FullName, Constants.I_WORKER_TASK);
                 return false;
             }
-            (var instance, var runMethod, var timeProperty, var timer) = ConstructClassFromAssembly(assembly, exportedClass);
+            (var instance, var runMethod, var timer) = ConstructClassFromAssembly(assembly, exportedClass);
             if (CheckIfPropertiesAreNull(instance, runMethod, timer))
             {
                 _logger.LogError("Nem sikerült példányosítani a(z) {exportedClass.FullName} nevű osztályt", exportedClass.FullName);
@@ -75,7 +75,7 @@ namespace Service.Implementations
             return true;
         }
 
-        private (object?, MethodInfo?, PropertyInfo?, uint?) ConstructClassFromAssembly(Assembly assembly, Type exportedClass)
+        private (object?, MethodInfo?, uint?) ConstructClassFromAssembly(Assembly assembly, Type exportedClass)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace Service.Implementations
                 var runMethod = exportedClass.GetMethod("Run");
                 var timerPropety = exportedClass.GetProperty("Timer");
                 var timer = (uint?)timerPropety?.GetValue(instance);
-                return (instance, runMethod, timerPropety, timer);
+                return (instance, runMethod, timer);
             }
             catch (Exception ex)
             {

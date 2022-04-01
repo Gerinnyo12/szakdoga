@@ -18,7 +18,7 @@ namespace Service.Implementations
 
         public AssemblyContext(IRunable runableInstance, IDllLifter dllLifter, ReferenceHelper referenceHelper, ILogger<AssemblyContext> logger)
         {
-            _assemblyLoadContext = new AssemblyLoadContext(String.Empty, isCollectible: true);
+            _assemblyLoadContext = new AssemblyLoadContext(string.Empty, isCollectible: true);
             RunableInstance = runableInstance;
             DllLifter = dllLifter;
             _referenceHelper = referenceHelper;

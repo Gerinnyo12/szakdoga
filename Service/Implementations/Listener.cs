@@ -16,7 +16,7 @@ namespace Service.Implementations
         private readonly string _responseWhenListenerStops = Constants.RESPONSE_JSON_WHEN_LISTENER_STOPS;
         private readonly ILogger<Listener> _logger;
 
-        public async Task StartListening(Func<RequestMessage, Task<string>> GetJsonData)
+        public async void StartListening(Func<RequestMessage, Task<string>> GetJsonData)
         {
             if (GetJsonData is null)
             {

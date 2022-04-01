@@ -51,11 +51,7 @@ namespace UI.Components
             {
                 await ErrorAlerter.InvokeAsync("Nem sikerült frissíteni a UI-t!");
             }
-            if (!IsServiceStillRunning?.Invoke() ?? false)
-            {
-                await ErrorAlerter.InvokeAsync("A frissítés során leállt a szervíz!");
-                await SetCurrentState.InvokeAsync();
-            }
+            await CheckIfServiceStillRunning();
             return obj;
         }
 
@@ -71,7 +67,7 @@ namespace UI.Components
                 client.Close();
                 return JsonHelper.Deserialize<Tout>(response);
             }
-            catch (Exception ex) { await ExceptionAlerter.InvokeAsync(ex); }
+            catch (Exception ex) { await HandleException(ex); }
             return default;
         }
 
@@ -100,7 +96,7 @@ namespace UI.Components
                     return;
                 }
             }
-            catch (Exception ex) { await ExceptionAlerter.InvokeAsync(ex); }
+            catch (Exception ex) { await HandleException(ex); }
             await ErrorAlerter.InvokeAsync("Nem sikerült leállítani a szervízt!");
         }
 
@@ -112,6 +108,21 @@ namespace UI.Components
                 return;
             }
             await ErrorAlerter.InvokeAsync("A TCP listener nem állt le!");
+        }
+
+        private async Task HandleException(Exception exception)
+        {
+            await ExceptionAlerter.InvokeAsync(exception);
+            await CheckIfServiceStillRunning();
+        }
+
+        private async Task CheckIfServiceStillRunning()
+        {
+            if (!IsServiceStillRunning?.Invoke() ?? false)
+            {
+                await ErrorAlerter.InvokeAsync("A művelet során leállt a szervíz!");
+                await SetCurrentState.InvokeAsync();
+            }
         }
 
         private async Task UploadFile(InputFileChangeEventArgs files)

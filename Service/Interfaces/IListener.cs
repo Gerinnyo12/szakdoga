@@ -4,6 +4,6 @@ namespace Service.Interfaces
 {
     public interface IListener
     {
-        Task StartListening(Func<RequestMessage, Task<string>> GetJsonData);
+        void StartListening(Func<RequestMessage, Task<string>> GetJsonData);
     }
 }

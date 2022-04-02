@@ -33,7 +33,6 @@ namespace Service.Implementations
         public async void RunDlls()
         {
             IterationCounter++;
-            Console.WriteLine(IterationCounter);
             await ContextContainer.ExecuteContainer();
         }
 

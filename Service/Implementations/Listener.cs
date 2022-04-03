@@ -46,7 +46,7 @@ namespace Service.Implementations
                 }
             }
             listener.Stop();
-            _logger.LogInformation("Sikeresen leallt a listener!");
+            _logger.LogInformation("Sikeresen leállt a listener!");
         }
     }
 }

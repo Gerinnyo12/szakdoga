@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\GitRepos\\szakdoga\\Tests\\SlowConstructor\\SlowConstructor.csproj",
-      "projectName": "SlowConstructor",
-      "projectPath": "C:\\GitRepos\\szakdoga\\Tests\\SlowConstructor\\SlowConstructor.csproj",
+      "projectUniqueName": "C:\\GitRepos\\szakdoga\\Tests\\TxtAppender\\TxtAppender.csproj",
+      "projectName": "TxtAppender",
+      "projectPath": "C:\\GitRepos\\szakdoga\\Tests\\TxtAppender\\TxtAppender.csproj",
       "packagesPath": "C:\\Users\\reveszg\\.nuget\\packages\\",
-      "outputPath": "C:\\GitRepos\\szakdoga\\Tests\\SlowConstructor\\obj\\",
+      "outputPath": "C:\\GitRepos\\szakdoga\\Tests\\TxtAppender\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\reveszg\\AppData\\Roaming\\NuGet\\NuGet.Config",

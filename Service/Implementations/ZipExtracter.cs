@@ -37,6 +37,7 @@ namespace Service.Implementations
             int delayCounter = 2;
             while (delayCounter <= maxCopyTimeInMiliSec && !isUnlocked)
             {
+                //itt valt at async-re a futas
                 await Task.Delay(delayCounter);
                 isUnlocked = IsZipUnlocked(zipPath);
                 delayCounter *= 2;

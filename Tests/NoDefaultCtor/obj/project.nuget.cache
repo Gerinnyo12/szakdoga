@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "8TSzMbqE5dSHY+aI96xfaA0FfX3SueWyVd/HrqEoxu4HQgqpM/43jM2gdVigK27yqrTDHO4TnaRgQGQcC9ZdLA==",
+  "dgSpecHash": "yvSb5RFi29t8kog7tM6kpVQJUuX8dER70jw1YWn0rVhRmyAiYdfmwzV40hkl+rS4BNyZ0L29Pdd7NXe+hXdQnQ==",
   "success": true,
   "projectFilePath": "C:\\GitRepos\\szakdoga\\Tests\\NoDefaultCtor\\NoDefaultCtor.csproj",
   "expectedPackageFiles": [],

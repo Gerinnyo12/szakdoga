@@ -32,7 +32,7 @@ namespace UI.Pages
             }
             catch (Exception ex)
             {
-                await JSRuntime.ErrorSwal("Hiba", $"Hiba történt inicializáláskor! {ex.Message} {ex.InnerException}");
+                await JSRuntime.ErrorSwal("A szolgáltatás nem található!", "Hiba történt inicializáláskor!");
             }
             _state = ServiceState.Unavailable;
             StateHasChanged();

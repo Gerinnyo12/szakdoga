@@ -8,14 +8,15 @@ namespace TxtAppender
 
         public async Task Run()
         {
-            string path = @"C:\GitRepos\szakdoga\Tests\text.txt";
-            if (!File.Exists(path))
-            {
-                File.Create(path).Dispose();
-            }
-            using var textAppender = File.AppendText(path);
-            await textAppender.WriteAsync($"Lefutott a TxtAppender projekt Run metódusa {DateTime.Now}-kor!\n");
-            await textAppender.FlushAsync();
+            await Task.Delay(-1);
+            //string path = @"C:\GitRepos\szakdoga\Tests\text.txt";
+            //if (!File.Exists(path))
+            //{
+            //    File.Create(path).Dispose();
+            //}
+            //using var textAppender = File.AppendText(path);
+            //await textAppender.WriteAsync($"Lefutott a TxtAppender projekt Run metódusa {DateTime.Now}-kor!\n");
+            //await textAppender.FlushAsync();
         }
     }
 }

@@ -98,13 +98,19 @@ namespace Service.Implementations
 
         public async Task Run()
         {
-            // amig nem futott le, addig nem lehet megegyszer mehivni
-            if (!_isLoaded || !CanStartRun() || _isCurrentlyRunning) return;
+            if (!_isLoaded || !CanStartRun()) return;
+            // amig nem futott le, addig nem lehet meg egyszer mehivni
+            if (_isCurrentlyRunning)
+            {
+                _logger.LogError("A(z) {_instance?.GetType()} előző futása még nem fejeződött be, " +
+                    "ezért most kihagyásra kerül.", _instance?.GetType());
+                return;
+            }
 
             try
             {
                 _isCurrentlyRunning = true;
-                //mivel a runMethod egy Task objektumot ad vissza ezert ez nem is lehet null
+                //mivel a runMethod egy Task objektumot ad vissza es ez await-elve van, ezert ez nem is lehet null
                 await (Task)_runMethod?.Invoke(_instance, Array.Empty<object>());
             }
             catch (Exception ex)

@@ -1,4 +1,5 @@
 ﻿using Service.Interfaces;
+using Shared;
 using Shared.Helpers;
 using Shared.Models;
 
@@ -12,6 +13,8 @@ namespace Service.Implementations
         private readonly IListener _listener;
         private readonly ILogger<ContextContainer> _logger;
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly string _responseForGCCollect = Constants.RESPONSE_JSON_FOR_GC_COLLECT;
+        private readonly string _responseForIndefinitRequest = Constants.RESPONSE_JSON_FOR_INDEFINIT_REQUEST;
 
         public ContextContainer(IZipExtracter zipExtracter, IListener listener, IServiceScopeFactory serviceScopeFactory, ILogger<ContextContainer> logger)
         {
@@ -37,23 +40,22 @@ namespace Service.Implementations
             }
 
             string? rootDirPath = await ZipExtracter.ExtractZip(zipPath, maxCopyTimeInMiliSec);
-            if (rootDirPath is null)
-            {
-                return false;
-            }
+            if (rootDirPath is null) return false;
 
             using var serviceScope = _serviceScopeFactory.CreateScope();
             IAssemblyContext context = serviceScope.ServiceProvider.GetRequiredService<IAssemblyContext>();
             bool success = context.Load(rootDirPath);
+
             if (!success)
             {
                 _logger.LogError("Nem sikerült betölteni a(z) {zipPath} projektet.", zipPath);
-                await context.UnloadContext();
+                context.UnloadContext();
                 return false;
             }
 
             Contexts.Add(zipPath, context);
             _logger.LogInformation("{zipPath} sikeresen be lett töltve!", zipPath);
+
             return true;
         }
 
@@ -78,24 +80,69 @@ namespace Service.Implementations
                 return false;
             }
 
-            await context.UnloadContext();
-            Contexts.Remove(zipPath);
-            _logger.LogInformation("A(z) {zipPath} sikeresen el lett engedve és ki lett törölve.", zipPath);
+            await Task.Run(() =>
+            {
+                context.UnloadContext();
+                Contexts.Remove(zipPath);
+
+                string? rootDirPath = context.GetDirPathOfContext();
+                if (rootDirPath is null) return;
+
+                context = null;
+                FreeMemoryOfContext(rootDirPath);
+                _logger.LogInformation("A(z) {zipPath} sikeresen el lett engedve.", zipPath);
+            });
+
             return true;
-            //ez utan a kovetkezo GC elviszi a context objektumot
+        }
+
+        private void FreeMemoryOfContext(string rootDirPath)
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            string rootDirName = FileHelper.GetFileName(rootDirPath, withoutExtension: true);
+            string localDirPath = FileHelper.GetAbsolutePathOfLocalDir(rootDirName);
+            string runnerDirPath = FileHelper.GetAbsolutePathOfRunDir(rootDirName);
+            RemoveDir(localDirPath);
+            RemoveDir(runnerDirPath);
+        }
+
+        private void RemoveDir(string dirPath)
+        {
+            if (!FileHelper.DirExists(dirPath))
+            {
+                _logger.LogError("Nem létezik a(z) {dirPath} útvonalú mappa ezért nem is törlődött.", dirPath);
+                return;
+            }
+            try
+            {
+                FileHelper.DeleteDir(dirPath);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Nem sikerült kitörölni a(z) {dirPath} útvonalú mappát.", dirPath);
+            }
         }
 
         public async Task<string> CreateJsonData(RequestMessage requestMessage)
         {
-            if (requestMessage == RequestMessage.Indefinit)
+            switch (requestMessage)
             {
-                //TODO
-                return "Ejjejj, egy RequestMessage enum értéket adj at a listenernek...";
+                case RequestMessage.Indefinit:
+                    return _responseForIndefinitRequest;
+                case RequestMessage.GetDataWithDetails:
+                    return await JsonHelper.SerializeAsync(Contexts.Keys);
+                case RequestMessage.CallGC:
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    return _responseForGCCollect;
+                default:
+                    //GetData
+                    return await JsonHelper.SerializeAsync(Contexts.Keys
+                        .Select(key => FileHelper.GetFileName(key, withoutExtension: true)));
             }
-
-            return await JsonHelper.SerializeAsync(requestMessage == RequestMessage.GetData
-                ? Contexts.Keys.Select(key => FileHelper.GetFileName(key, withoutExtension: true))
-                : Contexts.Keys);
         }
     }
 }

@@ -6,6 +6,7 @@
         IDllLifter DllLifter { get; }
         Task InvokeRun();
         bool Load(string rootDirPath);
-        Task UnloadContext();
+        void UnloadContext();
+        string? GetDirPathOfContext();
     }
 }

@@ -17,6 +17,10 @@ namespace Shared
         public static readonly int PORT = 5678;
         public static readonly string RESPONSE_STRING_WHEN_LISTENER_STOPS = "Leall a listener!";
         public static readonly string RESPONSE_JSON_WHEN_LISTENER_STOPS = JsonHelper.Serialize(RESPONSE_STRING_WHEN_LISTENER_STOPS);
+        public static readonly string RESPONSE_STRING_FOR_GC_COLLECT = "Lefutott a Garbage Collector";
+        public static readonly string RESPONSE_JSON_FOR_GC_COLLECT = JsonHelper.Serialize(RESPONSE_STRING_FOR_GC_COLLECT);
+        public static readonly string RESPONSE_STRING_FOR_INDEFINIT_REQUEST = "Ejjejj, egy RequestMessage enum értéket adj at a listenernek...";
+        public static readonly string RESPONSE_JSON_FOR_INDEFINIT_REQUEST = JsonHelper.Serialize(RESPONSE_STRING_FOR_INDEFINIT_REQUEST);
         public static readonly double MAX_SECONDS_TO_WAIT_FOR_SERVICE = 10;
         public static readonly int MAX_LENGTH_OF_TCP_RESPONSE = 10000;
 

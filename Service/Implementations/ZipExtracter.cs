@@ -17,16 +17,10 @@ namespace Service.Implementations
                 return null;
             }
 
-            if (!await UnlockZip(zipPath, maxCopyTimeInMiliSec))
-            {
-                return null;
-            }
+            if (!await UnlockZip(zipPath, maxCopyTimeInMiliSec)) return null;
 
             string? rootDirPath = ExtractZipAndGetRootDirPath(zipPath);
-            if (rootDirPath is null)
-            {
-                return null;
-            }
+            if (rootDirPath is null) return null;
 
             return rootDirPath;
         }
@@ -46,6 +40,7 @@ namespace Service.Implementations
             {
                 _logger.LogError("A(z) {zipPath} másolasá nem lett kész időben.", zipPath);
             }
+
             return isUnlocked;
         }
 
@@ -53,6 +48,7 @@ namespace Service.Implementations
         {
             string rootDirName = FileHelper.GetFileName(zipPath, withoutExtension: true);
             string destinationDirPath = FileHelper.GetAbsolutePathOfLocalDir(rootDirName);
+
             try
             {
                 //EZ MERGELI NEM PEDIG FELULIRJA
@@ -63,6 +59,7 @@ namespace Service.Implementations
             {
                 _logger.LogError(ex, "Nem sikerült a(z) {zipPath} kicsomagolása a(z) {rootDirName} mappába.", zipPath, rootDirName);
             }
+
             return null;
         }
 
@@ -71,6 +68,7 @@ namespace Service.Implementations
             try
             {
                 using FileStream stream = FileHelper.OpenFile(zipPath);
+
                 return true;
             }
             catch (Exception ex)
@@ -78,6 +76,7 @@ namespace Service.Implementations
                 //TODO HA NEM AZZAL VAN A BAJ, HOGY NEM ELERHETO A FILE
                 _logger.LogInformation(ex, "A(z) {zipPath} másolása még mindig folyamatban van...", zipPath);
             }
+
             return false;
         }
 

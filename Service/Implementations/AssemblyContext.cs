@@ -38,16 +38,11 @@ namespace Service.Implementations
 
             _rootDirPath = rootDirPath;
             Assembly? mainAssembly = HandleAssemblies();
-            if (mainAssembly is null)
-            {
-                return false;
-            }
+            if (mainAssembly is null) return false;
 
             bool isInstanceCreated = RunableInstance.CreateInstance(mainAssembly);
-            if (!isInstanceCreated)
-            {
-                return false;
-            }
+            if (!isInstanceCreated) return false;
+
             return true;
         }
 
@@ -55,23 +50,15 @@ namespace Service.Implementations
         {
             string rootDirName = FileHelper.GetFileName(_rootDirPath, withoutExtension: true);
             bool isDirCreated = DllLifter.CreateRunnerDir(rootDirName);
-            if (!isDirCreated)
-            {
-                return null;
-            }
+            if (!isDirCreated) return null;
 
             string fileName = rootDirName;
             string? filePath = DllLifter?.CopyFileToRunnerDir(rootDirName, fileName);
-            if (filePath is null)
-            {
-                return null;
-            }
+            if (filePath is null) return null;
 
             Assembly? assembly = LoadAssembliesWithRecursion(rootDirName, filePath);
-            if (assembly is null)
-            {
-                return null;
-            }
+            if (assembly is null) return null;
+
             return assembly;
         }
 
@@ -85,10 +72,7 @@ namespace Service.Implementations
 
             foreach (var referencedAssembly in assembly.GetReferencedAssemblies())
             {
-                if (CanSkipAssembly(referencedAssembly))
-                {
-                    continue;
-                }
+                if (CanSkipAssembly(referencedAssembly)) continue;
 
                 string? referencedAssemblyPath = DllLifter?.CopyFileToRunnerDir(rootDirName, referencedAssembly.Name);
                 if (referencedAssemblyPath is null)
@@ -102,6 +86,7 @@ namespace Service.Implementations
                     return null;
                 }
             }
+
             return assembly;
         }
 
@@ -116,6 +101,7 @@ namespace Service.Implementations
             {
                 _logger.LogError(ex, "Nem sikerült betölteni a(z) {filePathToLoad} útvonalú assembly-t.", filePathToLoad);
             }
+
             return null;
         }
 
@@ -128,15 +114,16 @@ namespace Service.Implementations
             }
             else if (_assemblyLoadContext.Assemblies.Any(assembly => assembly.FullName == assemblyName.FullName))
             {
-                _logger.LogInformation("A(z) {assemblyName.FullName} nevű assembly már egyszer be van töltve ebbe az AppDomain-be", assemblyName.FullName);
+                _logger.LogInformation("A(z) {assemblyName.FullName} nevű assembly már egyszer be van töltve ebbe a Context-be", assemblyName.FullName);
                 return true;
             }
+
             return false;
         }
 
         public async Task InvokeRun() => await RunableInstance.Run();
 
-        public async Task UnloadContext()
+        public void UnloadContext()
         {
             if (string.IsNullOrEmpty(_rootDirPath))
             {
@@ -144,51 +131,11 @@ namespace Service.Implementations
                 return;
             }
 
-            await Task.Run(() =>
-            {
-                RunableInstance?.UnleashReferences();
-                _assemblyLoadContext?.Unload();
-                CallGC();
-                HandleDirDelete();
-            });
+            RunableInstance?.UnleashReferences();
+            _assemblyLoadContext?.Unload();
         }
 
-        private void CallGC()
-        {
-            //ez async, mert a fuggveny amelyikbol meghivtuk async, de attol ez ugyn ugy megallitja a threadet
-            //azert kell 2x meghivni, mert 2 gc kell ahhoz, hogy kitorlodjon a memoriabol egy assembly objektum
-            //es hogy unloadolni lehessen a contextet
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-        }
-
-        private void HandleDirDelete()
-        {
-            string rootDirName = FileHelper.GetFileName(_rootDirPath, withoutExtension: true);
-            string localDirPath = FileHelper.GetAbsolutePathOfLocalDir(rootDirName);
-            string runnerDirPath = FileHelper.GetAbsolutePathOfRunDir(rootDirName);
-            RemoveDir(localDirPath);
-            RemoveDir(runnerDirPath);
-        }
-
-        private void RemoveDir(string dirPath)
-        {
-            if (!FileHelper.DirExists(dirPath))
-            {
-                _logger.LogError("Nem létezik a(z) {dirPath} útvonalú mappa ezért nem is törlődött.", dirPath);
-                return;
-            }
-            try
-            {
-                FileHelper.DeleteDir(dirPath);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Nem sikerült kitörölni a(z) {dirPath} útvonalú mappát.", dirPath);
-            }
-        }
+        public string? GetDirPathOfContext() => _rootDirPath;
 
     }
 }

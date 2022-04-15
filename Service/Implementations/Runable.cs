@@ -25,18 +25,13 @@ namespace Service.Implementations
             }
 
             var exportedClass = GetExportedClass(assembly);
-            if (exportedClass is null)
-            {
-                return false;
-            }
+            if (exportedClass is null) return false;
 
             bool isInstanceCreated = InitVariables(assembly, exportedClass);
-            if (!isInstanceCreated)
-            {
-                return false;
-            }
+            if (!isInstanceCreated) return false;
 
             _logger.LogInformation("A(z) {exportedClass.FullName} sikeresen példányosítva lett.", exportedClass.FullName);
+
             return true;
         }
 
@@ -50,6 +45,7 @@ namespace Service.Implementations
             {
                 _logger.LogError(ex, "A futtatandó ({assembly.FullName}) assembly-ben 1 db publikus osztálynak kell léteznie.", assembly.FullName);
             }
+
             return null;
         }
 
@@ -72,6 +68,7 @@ namespace Service.Implementations
             _startedAt = Handler.IterationCounter + 1;
             _isCurrentlyRunning = false;
             _isLoaded = true;
+
             return true;
         }
 
@@ -84,12 +81,14 @@ namespace Service.Implementations
                 var runMethod = exportedClass.GetMethod("Run");
                 var timerPropety = exportedClass.GetProperty("Timer");
                 var timer = (uint?)timerPropety?.GetValue(instance);
+
                 return (instance, runMethod, timer);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Hiba történt a(z) {exportedClass.FullName} példányosítása során!", exportedClass.FullName);
             }
+
             return default;
         }
 

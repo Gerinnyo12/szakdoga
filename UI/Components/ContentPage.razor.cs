@@ -33,15 +33,15 @@ namespace UI.Components
             await base.OnAfterRenderAsync(firstRender);
             if (firstRender)
             {
-                await OnRefreshCallback(RequestMessage.GetData);
+                await OnHandleRequestCallback<IEnumerable<string>>(RequestMessage.GetData);
             }
         }
 
-        private async Task OnRefreshCallback(RequestMessage requestMessage)
+        private async Task OnHandleRequestCallback<Tout>(RequestMessage requestMessage)
         {
-            IEnumerable<string>? obj = await HandleRequest<IEnumerable<string>>(requestMessage);
-            if (obj is null) return;
-            await RefreshUI(obj);
+            Tout? obj = await HandleRequest<Tout>(requestMessage);
+            if (obj is null || typeof(Tout) != typeof(IEnumerable<string>)) return;
+            await RefreshUI((obj as IEnumerable<string>)!);
         }
 
         private async Task<Tout?> HandleRequest<Tout>(RequestMessage requestMessage)
@@ -49,9 +49,10 @@ namespace UI.Components
             Tout? obj = await SendRequest<Tout>(requestMessage);
             if (obj is null)
             {
-                await ErrorAlerter.InvokeAsync("Nem sikerült frissíteni a UI-t!");
+                await ErrorAlerter.InvokeAsync("Sikertelen művelet!");
             }
             await CheckIfServiceStillRunning();
+            await SuccessAlerter.InvokeAsync("Sikeres művelet!");
             return obj;
         }
 
@@ -75,7 +76,6 @@ namespace UI.Components
         {
             _lastRefresh = DateTime.Now;
             _runningContexts = updatedData;
-            await SuccessAlerter.InvokeAsync("Az adatok frissültek!");
         }
 
         private async Task OnStopCallback()
@@ -87,7 +87,7 @@ namespace UI.Components
 
         private async Task Stop()
         {
-            await HandleListener();
+            await HandleListenerStop();
             try
             {
                 if (StopService?.Invoke() ?? false)
@@ -100,7 +100,7 @@ namespace UI.Components
             await ErrorAlerter.InvokeAsync("Nem sikerült leállítani a szervízt!");
         }
 
-        private async Task HandleListener()
+        private async Task HandleListenerStop()
         {
             if (await SendRequest<string>(RequestMessage.StopListener) == Constants.RESPONSE_STRING_WHEN_LISTENER_STOPS)
             {

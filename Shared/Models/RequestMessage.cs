@@ -3,8 +3,9 @@
     public enum RequestMessage
     {
         Indefinit = 0,
-        GetData = 1,
-        GetDataWithDetails = 2,
-        StopListener = 3,
+        CallGC = 1,
+        GetData = 2,
+        GetDataWithDetails = 3,
+        StopListener = 4,
     }
 }

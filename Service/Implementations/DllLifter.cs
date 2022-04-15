@@ -26,6 +26,7 @@ namespace Service.Implementations
             {
                 _logger.LogError(ex, "Nem sikerült a(z) {rootDirPath} nevű mappa létrehozása: {ex.Message}", rootDirPath);
             }
+
             return false;
         }
 
@@ -44,10 +45,7 @@ namespace Service.Implementations
 
             string dllName = FileHelper.AppendDllExtensionToFileName(fileNameWithoutExtension);
             string? fromFilePath = GetPathOfFileFromDir(rootDirName, dllName);
-            if (fromFilePath is null)
-            {
-                return null;
-            }
+            if (fromFilePath is null) return null;
 
             string rootDirPath = FileHelper.GetAbsolutePathOfRunDir(rootDirName);
             string toFilePath = FileHelper.CombinePaths(rootDirPath, dllName);
@@ -60,6 +58,7 @@ namespace Service.Implementations
             {
                 _logger.LogError(ex, "Nem sikerült a(z) {dllName} nevű file másolása {fromFilePath}-ból {toFilePath}-ba: {ex.Message}", dllName, fromFilePath, toFilePath, ex.Message);
             }
+
             return null;
         }
 
@@ -69,12 +68,14 @@ namespace Service.Implementations
             {
                 string dirPath = FileHelper.GetAbsolutePathOfLocalDir(rootDirName);
                 string filePath = FileHelper.GetSingleFile(dirPath, dllName);
+
                 return filePath;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Pontosan 1 db {dllName} nevű file-nak kell léteznie a {dirName} nevű mappában.", dllName, rootDirName);
             }
+
             return null;
         }
 

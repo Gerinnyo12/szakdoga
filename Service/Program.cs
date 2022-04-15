@@ -21,12 +21,12 @@ try
         .ConfigureServices((context, services) =>
         {
             services.AddHostedService<Motor>();
-            services.AddSingleton(new ReferenceHelper());
-            services.AddTransient<IHandler, Handler>();
-            services.AddTransient<IContextContainer, ContextContainer>();
-            services.AddTransient<IListener, Listener>();
-            services.AddTransient<IAssemblyContext, AssemblyContext>();
-            services.AddTransient<IZipExtracter, ZipExtracter>();
+            services.AddSingleton<ReferenceHelper>();
+            services.AddScoped<IHandler, Handler>();
+            services.AddScoped<IContextContainer, ContextContainer>();
+            services.AddScoped<IListener, Listener>();
+            services.AddScoped<IAssemblyContext, AssemblyContext>();
+            services.AddScoped<IZipExtracter, ZipExtracter>();
             services.AddScoped<IRunable, Runable>();
             services.AddScoped<IDllLifter, DllLifter>();
             services.Configure<ParametersModel>(context.Configuration.GetSection(Constants.PARAMETERS_NAME));

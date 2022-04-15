@@ -36,14 +36,10 @@ namespace Service.Implementations
             await ContextContainer.ExecuteContainer();
         }
 
-        private async void OnFileAdd(string zipPath)
-        {
+        private async void OnFileAdd(string zipPath) =>
             await ContextContainer.LoadAssemblyWithReferences(zipPath, _parameters.MaxCopyTimeInMiliSec);
-        }
 
-        private async void OnFileDelete(string zipPath)
-        {
+        private async void OnFileDelete(string zipPath) =>
             await ContextContainer.FindAndRemoveAssembly(zipPath);
-        }
     }
 }

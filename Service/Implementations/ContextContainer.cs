@@ -48,7 +48,7 @@ namespace Service.Implementations
 
             if (!success)
             {
-                _logger.LogError("Nem sikerült betölteni a(z) {zipPath} projektet.", zipPath);
+                _logger.LogError("Nem sikerült betölteni a(z) {zipPath} feladatot.", zipPath);
                 context.UnloadContext();
                 return false;
             }

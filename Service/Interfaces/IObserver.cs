@@ -1,6 +1,6 @@
 ﻿namespace Service.Interfaces
 {
-    public interface IHandler
+    public interface IObserver
     {
         IContextContainer ContextContainer { get; }
         void RunDlls();

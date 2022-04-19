@@ -22,7 +22,7 @@ try
         {
             services.AddHostedService<Motor>();
             services.AddSingleton<ReferenceHelper>();
-            services.AddScoped<IHandler, Handler>();
+            services.AddScoped<IObserver, Observer>();
             services.AddScoped<IContextContainer, ContextContainer>();
             services.AddScoped<IListener, Listener>();
             services.AddScoped<IAssemblyContext, AssemblyContext>();

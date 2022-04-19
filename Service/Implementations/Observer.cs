@@ -6,7 +6,7 @@ using Shared.Models.Parameters;
 
 namespace Service.Implementations
 {
-    public class Handler : IHandler
+    public class Observer : IObserver
     {
         public IContextContainer ContextContainer { get; }
         public static ulong IterationCounter { get; private set; } = 0;
@@ -15,7 +15,7 @@ namespace Service.Implementations
         private readonly ParametersModel _parameters;
         private readonly FileSystemWatcher _fileSystemWatcher;
 
-        public Handler(IContextContainer contextContainer, IOptions<ParametersModel> parameters)
+        public Observer(IContextContainer contextContainer, IOptions<ParametersModel> parameters)
         {
             ContextContainer = contextContainer;
             _parameters = parameters.Value;

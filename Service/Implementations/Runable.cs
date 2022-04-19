@@ -65,7 +65,7 @@ namespace Service.Implementations
             _instance = instance;
             _runMethod = runMethod;
             _timer = timer;
-            _startedAt = Handler.IterationCounter + 1;
+            _startedAt = Observer.IterationCounter + 1;
             _isCurrentlyRunning = false;
             _isLoaded = true;
 
@@ -121,7 +121,7 @@ namespace Service.Implementations
                 _isCurrentlyRunning = false;
             }
         }
-        private bool CanStartRun() => (Handler.IterationCounter - _startedAt) % _timer == 0;
+        private bool CanStartRun() => (Observer.IterationCounter - _startedAt) % _timer == 0;
 
         public void UnleashReferences()
         {

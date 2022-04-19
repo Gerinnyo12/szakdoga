@@ -4,13 +4,13 @@ namespace Service
 {
     public class Motor : BackgroundService
     {
-        private readonly IHandler _handler;
+        private readonly IObserver _observer;
         private System.Timers.Timer? _timer;
 
         public Motor(IServiceScopeFactory serviceScopeFactory)
         {
             using var serviceScope = serviceScopeFactory.CreateScope();
-            _handler = serviceScope.ServiceProvider.GetRequiredService<IHandler>();
+            _observer = serviceScope.ServiceProvider.GetRequiredService<IObserver>();
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -27,7 +27,7 @@ namespace Service
                     _timer.Dispose();
                     return;
                 }
-                _handler.RunDlls();
+                _observer.RunDlls();
             };
             _timer.Enabled = true;
         }

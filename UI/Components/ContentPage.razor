@@ -5,21 +5,22 @@
     <div class="d-flex flex-wrap mb-3 p-3 bg-light">
         <div class="p-2 bd-highlight">
             <button @onclick="() => OnHandleRequestCallback<IEnumerable<string>>(RequestMessage.GetData)" 
-                class="btn btn-warning">
+                class="btn btn-warning elevating-button">
                 <i class="fas fa-sync"></i>
                 Frissítés
             </button>
         </div>
         <div class="p-2 bd-highlight">
             <button @onclick="() => OnHandleRequestCallback<string>(RequestMessage.CallGC)" 
-                class="btn btn-warning">
+                class="btn btn-warning elevating-button">
                 <i class="fas fa-broom"></i>
                 Takarítás (GC)
             </button>
         </div>
         <div class="p-2 bd-highlight">
             <InputFile id="filePicker" OnChange="UploadFile" class="d-none" accept=".zip" multiple></InputFile>
-            <button onclick="document.getElementById('filePicker').click()" class="btn btn-warning">
+            <button onclick="document.getElementById('filePicker').click()" 
+                class="btn btn-warning elevating-button">
                 <i class="fas fa-cloud-upload-alt"></i>
                 Betöltés
             </button>

@@ -34,6 +34,7 @@ namespace UI.Components
             if (firstRender)
             {
                 await OnHandleRequestCallback<IEnumerable<string>>(RequestMessage.GetData);
+                StateHasChanged();
             }
         }
 
@@ -41,7 +42,7 @@ namespace UI.Components
         {
             Tout? obj = await HandleRequest<Tout>(requestMessage);
             if (obj is null || typeof(Tout) != typeof(IEnumerable<string>)) return;
-            await RefreshUI((obj as IEnumerable<string>)!);
+            RefreshUI((obj as IEnumerable<string>)!);
         }
 
         private async Task<Tout?> HandleRequest<Tout>(RequestMessage requestMessage)
@@ -72,7 +73,7 @@ namespace UI.Components
             return default;
         }
 
-        private async Task RefreshUI(IEnumerable<string> updatedData)
+        private void RefreshUI(IEnumerable<string> updatedData)
         {
             _lastRefresh = DateTime.Now;
             _runningContexts = updatedData;
